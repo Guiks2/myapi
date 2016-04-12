@@ -23,6 +23,95 @@
         "application/json"
     ],
     "paths": {
+        "/distributeur": {
+            "get": {
+                "tags": [
+                    "distributeur"
+                ],
+                "summary": "Display a listing of distributors.",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Distributeur"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "distributeur"
+                ],
+                "summary": "Create a distributor",
+                "description": "Use this method to create a distributor",
+                "operationId": "createDistributor",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Nom du distributeur",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "adresse",
+                        "in": "formData",
+                        "description": "Adresse du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "cpostal",
+                        "in": "formData",
+                        "description": "Code postal du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "ville",
+                        "in": "formData",
+                        "description": "Ville du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "pays",
+                        "in": "formData",
+                        "description": "Pays du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "telephone",
+                        "in": "formData",
+                        "description": "T\u00e9l\u00e9phone du distributeur",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Distributor created"
+                    },
+                    "422": {
+                        "description": "Champs manquant obligatoire ou incorrect"
+                    }
+                }
+            }
+        },
         "/film": {
             "get": {
                 "tags": [
@@ -257,7 +346,7 @@
                 "telephone"
             ],
             "properties": {
-                "id_forfait": {
+                "id_distributeur": {
                     "type": "number",
                     "format": "int64",
                     "default": 1
