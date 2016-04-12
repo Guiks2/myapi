@@ -130,10 +130,26 @@ class FilmController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @SWG\Get(
+     *      path="/film/{id_film}",
+     *      summary="Displays a single film",
+     *      description="Returns a single film object depending on its id",
+     *      tags={"film"},
+     *      @SWG\Parameter(
+     *          name="id_film",
+     *          in="path", 
+     *          type="integer",
+     *          description="id of film to fetch",
+     *      ),
+     *      @SWG\Response(
+     *          response=200,
+     *          description="successful operation",
+     *      ),
+     *      @SWG\Response(
+     *           response=404, 
+     *           description="Film not found"
+     *       ),
+     * )
      */
     public function show($id)
     {
