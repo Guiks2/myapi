@@ -23,6 +23,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesResources;
  *              email="guillaume.delapre@gmail.com"
  *          ),
  *     ),
+ *     consumes={"application/json"},
+ *     produces={"application/json"},
  * )
  */
  
