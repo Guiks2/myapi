@@ -95,8 +95,6 @@ class FilmController extends Controller
      *     )
      * )
      */
-
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -130,10 +128,27 @@ class FilmController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @SWG\Get(
+     *      path="/film/{id_film}",
+     *      summary="Displays a single film",
+     *      description="Returns a single film object based on its id",
+     *      operationId="showFilm",
+     *      tags={"film"},
+     *      @SWG\Parameter(
+     *          name="id_film",
+     *          in="path", 
+     *          type="integer",
+     *          description="id of film to fetch",
+     *      ),
+     *      @SWG\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @SWG\Response(
+     *           response=404, 
+     *           description="Film not found"
+     *       ),
+     * )
      */
     public function show($id)
     {
@@ -144,17 +159,72 @@ class FilmController extends Controller
                 ['error' => 'this film does not exist'],
                 404);
         }
-
-
         return $film;
     }
 
+
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @SWG\Put(
+     *     path="/film/{id_film}",
+     *     summary="Update a film",
+     *     description="Update the properties of a single film based on its id",
+     *     operationId="updateFilm",
+     *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
+     *     tags={"film"},
+     *     @SWG\Parameter(
+     *         description="Name of the film",
+     *         in="formData",
+     *         name="titre",
+     *         required=true,
+     *         type="string",
+     *         maximum="255"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Resume of the film",
+     *         in="formData",
+     *         name="resum",
+     *         required=true,
+     *         type="string",
+     *         maximum="255"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Date début affiche",
+     *         in="formData",
+     *         name="date_debut_affiche",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Date fin affiche",
+     *         in="formData",
+     *         name="date_fin_affiche",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Durée en minutes",
+     *         in="formData",
+     *         name="duree_minutes",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Année de production",
+     *         in="formData",
+     *         name="annee_production",
+     *         required=true,
+     *         type="integer",
+     *         maximum="4"
+     *     ),
+     *     @SWG\Response(
+     *         response=201,
+     *         description="Film updated"
+     *     ),
+     *     @SWG\Response(
+     *         response=422,
+     *         description="Champs manquant obligatoire ou incorrect"
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -191,7 +261,6 @@ class FilmController extends Controller
      *
      * )
      */
-
 
     public function destroy($id)
     {
