@@ -13,19 +13,24 @@ class FilmController extends Controller
     /**
      * @SWG\Get(
      *     path="/film",
-     *     summary="Display a listing of films.",
+     *     summary="Get a film list",
+     *     description="Use this method to return a listing of films.",
+     *     operationId="listFilm",
      *     tags={"film"},
      *     @SWG\Response(
      *          response=200,
-     *          description="successful operation",
+     *          description="Successful operation",
      *          @SWG\Schema(
      *              type="array",
      *              @SWG\Items(ref="#/definitions/Film")
      *          ),
      *     ),
-     *  )
+     *     @SWG\Response(
+     *         response=204,
+     *         description="The request didn't return any content.",
+     *     ),
+     * )
      */
-
     public function index()
     {
         $films = Film::all();
@@ -36,7 +41,7 @@ class FilmController extends Controller
      * @SWG\Post(
      *     path="/film",
      *     summary="Create a film",
-     *     description="Use this method to create a film",
+     *     description="Use this method to create a new film.",
      *     operationId="createFilm",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"film"},
@@ -86,8 +91,11 @@ class FilmController extends Controller
      *         maximum="4"
      *     ),
      *     @SWG\Response(
-     *         response=201,
-     *         description="Film created"
+     *          response=201,
+     *          description="Film created",
+     *          @SWG\Schema(
+     *               ref="#/definitions/Film",
+     *          ),
      *     ),
      *     @SWG\Response(
      *         response=422,
@@ -105,7 +113,7 @@ class FilmController extends Controller
             'duree_minutes' => 'required|numeric',
             'annee_production' => 'required|digits:4'
 
-        ]);
+            ]);
 
         if($validator->fails()){
             return response()->json(
@@ -130,8 +138,8 @@ class FilmController extends Controller
     /**
      * @SWG\Get(
      *      path="/film/{id_film}",
-     *      summary="Displays a single film",
-     *      description="Returns a single film object based on its id",
+     *      summary="Display a single film",
+     *      description="Use this method to return a single film attributes based on its id.",
      *      operationId="showFilm",
      *      tags={"film"},
      *      @SWG\Parameter(
@@ -143,6 +151,9 @@ class FilmController extends Controller
      *      @SWG\Response(
      *          response=200,
      *          description="Successful operation",
+     *           @SWG\Schema(
+     *               ref="#/definitions/Film",
+     *           ),
      *      ),
      *      @SWG\Response(
      *           response=404, 
@@ -167,7 +178,7 @@ class FilmController extends Controller
      * @SWG\Put(
      *     path="/film/{id_film}",
      *     summary="Update a film",
-     *     description="Update the properties of a single film based on its id",
+     *     description="Use this method to update the attributes of a film based on its id.",
      *     operationId="updateFilm",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"film"},
@@ -239,7 +250,7 @@ class FilmController extends Controller
      * @SWG\Delete(
      *     path="/film/{id_film}",
      *     summary="Delete a film",
-     *     description="Delete a film through an ID",
+     *     description="Use this method to delete a film based on its id.",
      *     operationId="deleteFilm",
      *     tags={"film"},
      *     @SWG\Parameter(
@@ -261,7 +272,6 @@ class FilmController extends Controller
      *
      * )
      */
-
     public function destroy($id)
     {
         $film = Film::find($id);
