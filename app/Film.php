@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @SWG\Definition(@SWG\Xml(name="Film"))
+ */
 class Film extends Model
 {
     public $timestamps = false;
