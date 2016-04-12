@@ -10,32 +10,25 @@ use Illuminate\Support\Facades\Validator;
 
 class FilmController extends Controller
 {
-/**
- * @SWG\Get(
- *     path="/film",
- *     summary="Display a listing of films.",
- *     tags={"film"},
- *     produces={"application/xml", "application/json"},
- *     @SWG\Response(
- *          response=200,
- *          description="successful operation",
- *          @SWG\Schema(
- *              type="array",
- *              @SWG\Items(ref="#/definitions/Film"),
- *          ),
- *     ),
- * )
- */
- 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @SWG\Get(
+     *     path="/film",
+     *     summary="Display a listing of films.",
+     *     tags={"film"},
+     *     produces={"application/xml", "application/json"},
+     *     @SWG\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref="#/definitions/Film"),
+     *          ),
+     *     ),
+     * )
      */
     public function index()
     {
         $films = Film::all();
-        
         return $films;
     }
 
@@ -48,24 +41,36 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'titre' => 'required|unique:films',
+            'titre' => 'string|required|unique:films',
+            'date_debut_affiche' => 'date_format:"Y-m-d"',
+            'date_fin_affiche' => 'date_format:"Y-m-d"',
+            'annee_production' => 'integer|min:1850',
+            'duree_minutes' => 'integer',
+            'id_distributeur' => 'integer|exists:distributeurs',
+            'id_genre' => 'integer',
+            'resum' => 'string',
         ]);
-        
-        if($validator->fails()){
+
+        if ($validator->fails()){
             return response()->json(
-                ['errors' => $validator->errors()->all()], 
-                422
-            );    
-        }   
-             
-        $film = new Film;
+                ['errors' => $validator->errors()->all()],
+                422); // HTTP Status code
+        }
+
+        // Enregistre un nouvel élément
+        $film = new Film();
         $film->titre = $request->titre;
+        $film->date_debut_affiche = $request->date_debut_affiche;
+        $film->date_fin_affiche = $request->date_fin_affiche;
+        $film->annee_production = $request->annee_production;
+        $film->duree_minutes = $request->duree_minutes;
+        $film->id_distributeur = $request->id_distributeur;
+        $film->id_genre = $request->id_genre;
+        $film->resum = $request->resum;
         $film->save();
-        
         return response()->json(
             ['id_film' => $film->id_film],
-            201
-        );
+            201); // HTTP Status code
     }
 
     /**
@@ -97,7 +102,37 @@ class FilmController extends Controller
     public function update(Request $request, $id)
     {
         $film = Film::find($id);
+        if (empty($film)){
+            return response()->json(
+                ['error' => 'This film does not exist'],
+                404); // HTTP Status code
+        }
+
+        $validator = Validator::make($request->all(), [
+            'titre' => 'string|unique:films',
+            'date_debut_affiche' => 'date_format:"Y-m-d"',
+            'date_fin_affiche' => 'date_format:"Y-m-d"',
+            'annee_production' => 'integer|min:1850',
+            'duree_minutes' => 'integer',
+            'id_distributeur' => 'integer|exists:distributeurs',
+            'id_genre' => 'integer',
+            'resum' => 'string',
+        ]);
+
+        if ($validator->fails()){
+            return response()->json(
+                ['errors' => $validator->errors()->all()],
+                422); // HTTP Status code
+        }
+
         $film->titre = $request->titre;
+        $film->date_debut_affiche = $request->date_debut_affiche;
+        $film->date_fin_affiche = $request->date_fin_affiche;
+        $film->annee_production = $request->annee_production;
+        $film->duree_minutes = $request->duree_minutes;
+        $film->id_distributeur = $request->id_distributeur;
+        $film->id_genre = $request->id_genre;
+        $film->resum = $request->resum;
         $film->save();
     }
 
@@ -110,7 +145,11 @@ class FilmController extends Controller
     public function destroy($id)
     {
         $film = Film::find($id);
-        
+        if (empty($film)){
+            return response()->json(
+                ['error' => 'This film does not exist'],
+                404); // HTTP Status code
+        }
         $film->delete();
     }
 }
