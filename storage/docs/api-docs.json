@@ -110,6 +110,97 @@
             }
         },
         "/film/{id_film}": {
+            "get": {
+                "tags": [
+                    "film"
+                ],
+                "summary": "Displays a single film",
+                "description": "Returns a single film object based on its id",
+                "operationId": "showFilm",
+                "parameters": [
+                    {
+                        "name": "id_film",
+                        "in": "path",
+                        "description": "id of film to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Film not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "film"
+                ],
+                "summary": "Update a film",
+                "description": "Update the properties of a single film based on its id",
+                "operationId": "updateFilm",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "titre",
+                        "in": "formData",
+                        "description": "Name of the film",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "resum",
+                        "in": "formData",
+                        "description": "Resume of the film",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "date_debut_affiche",
+                        "in": "formData",
+                        "description": "Date d\u00e9but affiche",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "date_fin_affiche",
+                        "in": "formData",
+                        "description": "Date fin affiche",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "duree_minutes",
+                        "in": "formData",
+                        "description": "Dur\u00e9e en minutes",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "annee_production",
+                        "in": "formData",
+                        "description": "Ann\u00e9e de production",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "4"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Film updated"
+                    },
+                    "422": {
+                        "description": "Champs manquant obligatoire ou incorrect"
+                    }
+                }
+            },
             "delete": {
                 "tags": [
                     "film"
@@ -138,5 +229,244 @@
             }
         }
     },
-    "definitions": {}
+    "definitions": {
+        "Abonnement": {
+            "required": [
+                "id_forfait",
+                "debut"
+            ],
+            "properties": {
+                "id_forfait": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "debut": {
+                    "type": "date",
+                    "format": "date",
+                    "default": "1992-01-01"
+                }
+            },
+            "xml": {
+                "name": "Abonnement"
+            }
+        },
+        "Distributeur": {
+            "required": [
+                "nom",
+                "telephone"
+            ],
+            "properties": {
+                "id_forfait": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "nom": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "telephone": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "adresse": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "cpostal": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "ville": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "pays": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                }
+            },
+            "xml": {
+                "name": "Distributeur"
+            }
+        },
+        "Employe": {
+            "required": [
+                "id_personne",
+                "id_fonction"
+            ],
+            "properties": {
+                "id_employe": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_personne": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_fonction": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                }
+            },
+            "xml": {
+                "name": "Employe"
+            }
+        },
+        "Film": {
+            "required": [
+                "titre"
+            ],
+            "properties": {
+                "id_film": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 42
+                },
+                "id_genre": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 0
+                },
+                "id_distributeur": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "titre": {
+                    "type": "string",
+                    "format": "string",
+                    "default": "Pulp Fiction"
+                },
+                "resum": {
+                    "type": "string",
+                    "format": "string",
+                    "default": "Dans un caf\u00e9 restaurant de Los Angeles, dans la matin\u00e9e, un couple de jeunes braqueurs, Pumpkin et Yolanda, discutent des risques que comporte leur activit\u00e9. Ils se d\u00e9cident finalement \u00e0 attaquer le lieu, afin de pouvoir d\u00e9valiser \u00e0 la fois l'\u00e9tablissement et les clients."
+                },
+                "date_debut_affiche": {
+                    "type": "date",
+                    "format": "date",
+                    "default": "1994-01-01"
+                },
+                "date_fin_affiche": {
+                    "type": "date",
+                    "format": "date",
+                    "default": "1994-04-01"
+                },
+                "duree_minutes": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 154
+                },
+                "annee_production": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1994
+                }
+            },
+            "xml": {
+                "name": "Film"
+            }
+        },
+        "Fonction": {
+            "required": [
+                "nom",
+                "salaire",
+                "cadre"
+            ],
+            "properties": {
+                "id_fonction": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "nom": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "salaire": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "cadre": {
+                    "type": "tinyint",
+                    "format": "int64",
+                    "default": 1
+                }
+            },
+            "xml": {
+                "name": "Fonction"
+            }
+        },
+        "Forfait": {
+            "required": [
+                "nom",
+                "resum",
+                "prix",
+                "duree_jours"
+            ],
+            "properties": {
+                "id_forfait": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "nom": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "resum": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "prix": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "duree_jours": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                }
+            },
+            "xml": {
+                "name": "Forfait"
+            }
+        },
+        "Genre": {
+            "required": [
+                "nom"
+            ],
+            "properties": {
+                "id_genre": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "nom": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                }
+            },
+            "xml": {
+                "name": "Genre"
+            }
+        }
+    }
 }

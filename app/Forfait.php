@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @SWG\Definition(
- *   required=("nom", "resum", "prix", "duree_jours"),
+ *   required={"nom", "resum", "prix", "duree_jours"},
  *   @SWG\Xml(name="Forfait"),
  *   @SWG\Property(format="int64", property="id_forfait", type="number", default=1),
  *   @SWG\Property(format="string", property="nom", type="string", default=""),
