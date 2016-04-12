@@ -21,15 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Film extends Model
 {
-    public $timestamps = false;
-
     public $primaryKey = "id_film";
-    public $id_genre;
-    public $id_distributeur;
-    public $titre;
-    public $resum;
-    public $date_debut_affiche;
-    public $date_fin_affiche;
-    public $duree_minutes;
-    public $annee_production;
+    public $timestamps = false;
 }
