@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Distributeur;
+use App\Genre;
 use App\Film;
 use Illuminate\Http\Request;
 
@@ -34,6 +36,11 @@ class FilmController extends Controller
     public function index()
     {
         $films = Film::all();
+
+        if ($films->isEmpty()) {
+            return response()->json("No content", 204);
+        }
+
         return $films;
     }
 
@@ -309,5 +316,93 @@ class FilmController extends Controller
         }
 
         $film->delete();
+    }
+
+    /**
+     * @SWG\Get(
+     *      path="/film/distributeur/{id_distributeur}",
+     *      summary="Display films by ditributor",
+     *      description="Use this method to return a listing of films based on distributors id.",
+     *      operationId="listFilmsByDistributor",
+     *      tags={"film"},
+     *      @SWG\Parameter(
+     *          name="id_distributeur",
+     *          in="path",
+     *          type="integer",
+     *          description="id of distributor to fetch",
+     *      ),
+     *      @SWG\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref="#/definitions/Film")
+     *          ),
+     *      ),
+     *      @SWG\Response(
+     *           response=404,
+     *           description="Distributor not found"
+     *       ),
+     * )
+     */
+    public function listFilmsByDistributor($id)
+    {
+        $distributeur = Distributeur::find($id);
+        if(empty($distributeur)){
+            return response()->json(
+                ['error' => 'This distributor does not exist'],
+                404);
+        }
+
+        $films = Film::where('id_distributeur', $id)->get();
+        if ($films->isEmpty()) {
+            return response()->json("No content", 204);
+        }
+
+        return $films;
+    }
+
+    /**
+     * @SWG\Get(
+     *      path="/film/genre/{id_genre}",
+     *      summary="Display films by genre",
+     *      description="Use this method to return a listing of films based on genre id.",
+     *      operationId="listFilmsByGenre",
+     *      tags={"film"},
+     *      @SWG\Parameter(
+     *          name="id_genre",
+     *          in="path",
+     *          type="integer",
+     *          description="id of genre to fetch",
+     *      ),
+     *      @SWG\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref="#/definitions/Film")
+     *          ),
+     *      ),
+     *      @SWG\Response(
+     *           response=404,
+     *           description="Genre not found"
+     *       ),
+     * )
+     */
+    public function listFilmsByGenre($id)
+    {
+        $genre = Genre::find($id);
+        if(empty($genre)){
+            return response()->json(
+                ['error' => 'This genre does not exist'],
+                404);
+        }
+
+        $films = Film::where('id_genre', $id)->get();
+        if ($films->isEmpty()) {
+            return response()->json("No content", 204);
+        }
+
+        return $films;
     }
 }

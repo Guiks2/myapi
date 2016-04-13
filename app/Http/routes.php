@@ -16,15 +16,29 @@ Route::get('/', function () {
 });
 
 Route::resource('abonnement', 'AbonnementController');
+
 Route::resource('distributeur', 'DistributeurController');
+
 Route::resource('employe', 'EmployeController');
+
 Route::resource('film', 'FilmController');
+Route::get('film/distributeur/{id_distributeur}', 'FilmController@listFilmsByDistributor');
+Route::get('film/genre/{id_genre}', 'FilmController@listFilmsByGenre');
+
 Route::resource('fonction', 'FonctionController');
+
 Route::resource('forfait', 'ForfaitController');
+
 Route::resource('genre', 'GenreController');
+
 Route::resource('historique_membre', 'HistoriqueMembreController');
+
 Route::resource('membre', 'MembreController');
+
 Route::resource('personne', 'PersonneController');
+
 Route::resource('reduction', 'ReductionController');
+
 Route::resource('salle', 'SalleController');
+
 Route::resource('seance', 'SeanceController');
