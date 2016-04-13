@@ -17,3 +17,5 @@ Route::get('/', function () {
 
 Route::resource('film', 'FilmController');
 Route::resource('distributeur', 'DistributeurController');
+Route::resource('employe', 'EmployeController');
+
