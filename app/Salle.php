@@ -19,4 +19,8 @@ class Salle extends Model
 {
     public $primaryKey = "id_salle";
     public $timestamps = false;
+
+    public function seances(){
+        return $this->hasMany('App\Seance', 'id_salle');
+    }
 }

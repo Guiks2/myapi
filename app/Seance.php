@@ -22,4 +22,28 @@ class Seance extends Model
 {
     public $primaryKey = "id";
     public $timestamps = false;
+
+    public function historiques(){
+        return $this->hasMany('App\HistoriqueMembre', 'id_seance');
+    }
+
+    public function film() {
+        return $this->belongsTo('App\Film', 'id_film');
+    }
+
+    public function salle() {
+        return $this->belongsTo('App\Salle', 'id_salle');
+    }
+
+    public function personneOuvreur() {
+        return $this->belongsTo('App\Personne', 'id_personne');
+    }
+
+    public function personneTechnicien() {
+        return $this->belongsTo('App\Personne', 'id_personne');
+    }
+    
+    public function personneMenage() {
+        return $this->belongsTo('App\Personne', 'id_personne');
+    }
 }

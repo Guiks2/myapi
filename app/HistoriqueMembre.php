@@ -18,4 +18,12 @@ class HistoriqueMembre extends Model
 {
     public $primaryKey = "id_historique";
     public $timestamps = false;
+
+    public function membre() {
+        return $this->belongsTo('App\Membre', 'id_membre');
+    }
+
+    public function seance() {
+        return $this->belongsTo('App\Seance', 'id');
+    }
 }

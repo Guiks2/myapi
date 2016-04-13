@@ -19,4 +19,8 @@ class Forfait extends Model
 {
     public $primaryKey = "id_forfait";
     public $timestamps = false;
+
+    public function abonnements(){
+        return $this->hasMany('App\Abonnement', 'id_forfait');
+    }
 }

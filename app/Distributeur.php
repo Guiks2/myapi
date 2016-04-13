@@ -21,4 +21,8 @@ class Distributeur extends Model
 {
     public $primaryKey = "id_distributeur";
     public $timestamps = false;
+
+    public function films(){
+        return $this->hasMany('App\Film', 'id_distributeur');
+    }
 }

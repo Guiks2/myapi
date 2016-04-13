@@ -17,4 +17,12 @@ class Employe extends Model
 {
     public $primaryKey = "id_employe";
     public $timestamps = false;
+
+    public function personne() {
+        return $this->belongsTo('App\Personne', 'id_personne');
+    }
+
+    public function fonction() {
+        return $this->belongsTo('App\Fonction', 'id_fonction');
+    }
 }

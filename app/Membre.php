@@ -19,4 +19,16 @@ class Membre extends Model
 {
     public $primaryKey = "id_membre";
     public $timestamps = false;
+
+    public function historiques(){
+        return $this->hasMany('App\HistoriqueMembre', 'id_membre');
+    }
+
+    public function personne() {
+        return $this->belongsTo('App\Personne', 'id_personne');
+    }
+
+    public function abonnement() {
+        return $this->belongsTo('App\Abonnement', 'id_abonnement');
+    }
 }

@@ -16,4 +16,12 @@ class Abonnement extends Model
 {
     public $primaryKey = "id_abonnement";
     public $timestamps = false;
+
+    public function forfait() {
+        return $this->belongsTo('App\Forfait', 'id_forfait');
+    }
+
+    public function membres(){
+        return $this->hasMany('App\Membre', 'id_abonnement');
+    }
 }

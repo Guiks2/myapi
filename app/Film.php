@@ -23,8 +23,16 @@ class Film extends Model
 {
     public $primaryKey = "id_film";
     public $timestamps = false;
-    
+
     public function genre() {
         return $this->belongsTo('App\Genre', 'id_genre');
+    }
+
+    public function distributeur() {
+        return $this->belongsTo('App\Distributeur', 'id_distributeur');
+    }
+
+    public function seances(){
+        return $this->hasMany('App\Seance', 'id_film');
     }
 }
