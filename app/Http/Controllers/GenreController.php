@@ -160,7 +160,7 @@ class GenreController extends Controller
                 422);
         }
 
-        $genre = Genre::find($id);
+        $genre = new Genre;
         $genre->nom = $request->nom;
         $genre->save();
         

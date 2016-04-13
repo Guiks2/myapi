@@ -248,7 +248,7 @@ class DistributeurController extends Controller
                 422);
         }
 
-        $distributeur = Distributeur::find($id);
+        $distributeur = new Distributeur;
         $distributeur->nom = $request->nom;
         $distributeur->adresse = $request->adresse;
         $distributeur->cpostal = $request->cpostal;

@@ -146,9 +146,9 @@ class SalleController extends Controller
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"salle"},
      *      @SWG\Parameter(
-     *         name="id_salle",
+     *         name="nom_salle",
      *         in="path",
-     *         type="integer",
+     *         type="string",
      *         description="Room ID"
      *     ),
      *     @SWG\Parameter(
@@ -200,7 +200,7 @@ class SalleController extends Controller
                 422);
         }
 
-        $salle = Salle::find($id);
+        $salle = new Salle;
         $salle->nom_salle = $request->nom_salle;
         $salle->etage_salle = $request->etage_salle;
         $salle->places = $request->places;
