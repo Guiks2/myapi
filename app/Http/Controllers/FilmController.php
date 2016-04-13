@@ -122,8 +122,7 @@ class FilmController extends Controller
                 'date_fin_affiche' => 'required|date|after:'.$request->date_debut_affiche,
                 'duree_minutes' => 'required|numeric',
                 'annee_production' => 'required|digits:4'
-        ]);
-                ]);
+            ]);
 
             if($validator->fails()){
                 return response()->json(

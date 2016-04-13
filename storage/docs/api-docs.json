@@ -117,16 +117,21 @@
                 "tags": [
                     "film"
                 ],
-                "summary": "Display a listing of films.",
+                "summary": "Get a film list",
+                "description": "Use this method to return a listing of films.",
+                "operationId": "listFilm",
                 "responses": {
                     "200": {
-                        "description": "successful operation",
+                        "description": "Successful operation",
                         "schema": {
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/Film"
                             }
                         }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
                     }
                 }
             },
@@ -135,7 +140,7 @@
                     "film"
                 ],
                 "summary": "Create a film",
-                "description": "Use this method to create a film",
+                "description": "Use this method to create a new film.",
                 "operationId": "createFilm",
                 "consumes": [
                     "multipart/form-data",
@@ -190,7 +195,10 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Film created"
+                        "description": "Film created",
+                        "schema": {
+                            "$ref": "#/definitions/Film"
+                        }
                     },
                     "422": {
                         "description": "Champs manquant obligatoire ou incorrect"
@@ -203,8 +211,8 @@
                 "tags": [
                     "film"
                 ],
-                "summary": "Displays a single film",
-                "description": "Returns a single film object based on its id",
+                "summary": "Display a single film",
+                "description": "Use this method to return a single film attributes based on its id.",
                 "operationId": "showFilm",
                 "parameters": [
                     {
@@ -216,7 +224,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Film"
+                        }
                     },
                     "404": {
                         "description": "Film not found"
@@ -228,7 +239,7 @@
                     "film"
                 ],
                 "summary": "Update a film",
-                "description": "Update the properties of a single film based on its id",
+                "description": "Use this method to update the attributes of a film based on its id.",
                 "operationId": "updateFilm",
                 "consumes": [
                     "multipart/form-data",
@@ -295,7 +306,7 @@
                     "film"
                 ],
                 "summary": "Delete a film",
-                "description": "Delete a film through an ID",
+                "description": "Use this method to delete a film based on its id.",
                 "operationId": "deleteFilm",
                 "parameters": [
                     {
@@ -555,6 +566,269 @@
             },
             "xml": {
                 "name": "Genre"
+            }
+        },
+        "HistoriqueMembre": {
+            "required": [
+                "id_membre",
+                "id_seance",
+                "date"
+            ],
+            "properties": {
+                "id_historique": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_membre": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_seance": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "date": {
+                    "type": "date",
+                    "format": "date",
+                    "default": ""
+                }
+            },
+            "xml": {
+                "name": "HistoriqueMembre"
+            }
+        },
+        "Membre": {
+            "required": [
+                "id_personne",
+                "id_abonnement",
+                "date_inscription",
+                "debut_abonnement"
+            ],
+            "properties": {
+                "id_membre": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_personne": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_abonnement": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "date_inscription": {
+                    "type": "date",
+                    "format": "date",
+                    "default": ""
+                },
+                "debut_abonnement": {
+                    "type": "date",
+                    "format": "date",
+                    "default": ""
+                }
+            },
+            "xml": {
+                "name": "Membre"
+            }
+        },
+        "Personne": {
+            "required": [
+                "nom",
+                "prenom",
+                "date_naissance",
+                "email",
+                "cpostal",
+                "ville",
+                "pays"
+            ],
+            "properties": {
+                "id_personne": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "nom": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "prenom": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "date_naissance": {
+                    "type": "date",
+                    "format": "date",
+                    "default": ""
+                },
+                "email": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "adresse": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "cpostal": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "ville": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "pays": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                }
+            },
+            "xml": {
+                "name": "Personne"
+            }
+        },
+        "Reduction": {
+            "required": [
+                "nom",
+                "date_debut",
+                "date_fin",
+                "pourcentage_reduction"
+            ],
+            "properties": {
+                "id_reduction": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "nom": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "date_debut": {
+                    "type": "date",
+                    "format": "date",
+                    "default": ""
+                },
+                "date_fin": {
+                    "type": "date",
+                    "format": "date",
+                    "default": ""
+                },
+                "pourcentage_reduction": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                }
+            },
+            "xml": {
+                "name": "Reduction"
+            }
+        },
+        "Salle": {
+            "required": [
+                "numero_salle",
+                "nom_salle",
+                "etage_salle",
+                "places"
+            ],
+            "properties": {
+                "id_salle": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "numero_salle": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "nom_salle": {
+                    "type": "string",
+                    "format": "string",
+                    "default": ""
+                },
+                "etage_salle": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "places": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                }
+            },
+            "xml": {
+                "name": "Salle"
+            }
+        },
+        "Seance": {
+            "required": [
+                "id_film",
+                "id_salle",
+                "id_personne_ouvreur",
+                "id_personne_technicien",
+                "id_personne_menage",
+                "debut_seance",
+                "fin_seance"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_film": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_salle": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_personne_ouvreur": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_personne_technicien": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "id_personne_menage": {
+                    "type": "number",
+                    "format": "int64",
+                    "default": 1
+                },
+                "debut_seance": {
+                    "type": "date",
+                    "format": "date",
+                    "default": ""
+                },
+                "fin_seance": {
+                    "type": "date",
+                    "format": "date",
+                    "default": ""
+                }
+            },
+            "xml": {
+                "name": "Seance"
             }
         }
     }
