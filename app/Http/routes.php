@@ -43,7 +43,6 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::resource('salle', 'SalleController');
 
     Route::resource('seance', 'SeanceController');
-}
 });
 
 Route::resource('distributeur', 'DistributeurController');
