@@ -175,10 +175,18 @@ class DistributeurController extends Controller
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"distributeur"},
      *     @SWG\Parameter(
+     *         description="ID distributor",
+     *         in="path",
+     *         name="id_distributeur",
+     *         required=true,
+     *         type="integer",
+     *         maximum="11"
+     *     ),
+     *     @SWG\Parameter(
      *         description="Nom du distributeur",
      *         in="formData",
      *         name="nom",
-     *         required=true,
+     *         required=false,
      *         type="string",
      *         maximum="255"
      *     ),
@@ -218,7 +226,7 @@ class DistributeurController extends Controller
      *         description="Téléphone du distributeur",
      *         in="formData",
      *         name="telephone",
-     *         required=true,
+     *         required=false,
      *         type="string",
      *         maximum="255"
      *     ),
@@ -238,8 +246,8 @@ class DistributeurController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|unique:distributeurs|max:255',
-            'telephone' => 'required|max:255'
+            'nom' => 'max:255',
+            'telephone' => 'max:255'
         ]);
 
         if($validator->fails()){

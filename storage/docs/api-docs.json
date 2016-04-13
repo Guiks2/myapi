@@ -104,10 +104,149 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Distributor created"
+                        "description": "Distributor created",
+                        "schema": {
+                            "$ref": "#/definitions/Distributeur"
+                        }
                     },
                     "422": {
                         "description": "Champs manquant obligatoire ou incorrect"
+                    }
+                }
+            }
+        },
+        "/distributeur/{id_distributeur}": {
+            "get": {
+                "tags": [
+                    "distributeur"
+                ],
+                "summary": "Display a single distributor",
+                "description": "Use this method to return a single distributor attributes based on its id.",
+                "operationId": "showDistributor",
+                "parameters": [
+                    {
+                        "name": "id_distributeur",
+                        "in": "path",
+                        "description": "id of distributeur to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Distributeur"
+                        }
+                    },
+                    "404": {
+                        "description": "Distributeur not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "distributeur"
+                ],
+                "summary": "Update a distributor",
+                "description": "Use this method to update the attributes of a distributor based on its id.",
+                "operationId": "updateDistributor",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_distributeur",
+                        "in": "path",
+                        "description": "ID distributor",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "11"
+                    },
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Nom du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "adresse",
+                        "in": "formData",
+                        "description": "Adresse du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "cpostal",
+                        "in": "formData",
+                        "description": "Code postal du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "ville",
+                        "in": "formData",
+                        "description": "Ville du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "pays",
+                        "in": "formData",
+                        "description": "Pays du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "telephone",
+                        "in": "formData",
+                        "description": "T\u00e9l\u00e9phone du distributeur",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Distributor updated",
+                        "schema": {
+                            "$ref": "#/definitions/Distributeur"
+                        }
+                    },
+                    "422": {
+                        "description": "Champs manquants obligatoires ou incorrects"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "distributeur"
+                ],
+                "summary": "Delete a distributor",
+                "description": "Use this method to delete a distributor based on its id.",
+                "operationId": "deleteDistributor",
+                "parameters": [
+                    {
+                        "name": "id_distributeur",
+                        "in": "path",
+                        "description": "Distributor ID to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Distributor deleted"
+                    },
+                    "404": {
+                        "description": "Invalid distributor value"
                     }
                 }
             }
@@ -293,11 +432,14 @@
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Film updated"
+                    "200": {
+                        "description": "Film updated",
+                        "schema": {
+                            "$ref": "#/definitions/Film"
+                        }
                     },
                     "422": {
-                        "description": "Champs manquant obligatoire ou incorrect"
+                        "description": "Champs manquants obligatoires ou incorrects"
                     }
                 }
             },
