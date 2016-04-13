@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *   @SWG\Property(format="int64", property="id_historique", type="number", default=1),
  *   @SWG\Property(format="int64", property="id_membre", type="number", default=1),
  *   @SWG\Property(format="int64", property="id_seance", type="number", default=1),
- *   @SWG\Property(format="date", property="date", type="date", default=""),
+ *   @SWG\Property(format="date", property="date", type="date", default="2015-08-17"),
  * )
  */
 class HistoriqueMembre extends Model
