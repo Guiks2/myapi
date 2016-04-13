@@ -22,4 +22,8 @@ class Fonction extends Model
     public function employes(){
         return $this->hasMany('App\Employe', 'id_fonction');
     }
+
+    public function personnes(){
+        return $this->belongsToMany('App\Personne', 'employes', 'id_fonction', 'id_personne');
+    }
 }

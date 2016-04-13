@@ -43,4 +43,8 @@ class Personne extends Model
     public function seancesMenage(){
         return $this->hasMany('App\Seance', 'id_personne_menage');
     }
+
+    public function fonctions(){
+        return $this->belongsToMany('App\Fonction', 'employes', 'id_personne', 'id_fonction');
+    }
 }
