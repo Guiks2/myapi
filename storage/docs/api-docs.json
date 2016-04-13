@@ -633,6 +633,583 @@
                     }
                 }
             }
+        },
+        "/genre": {
+            "get": {
+                "tags": [
+                    "genre"
+                ],
+                "summary": "Display a listing of genres.",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Genre"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "genre"
+                ],
+                "summary": "Create a genre",
+                "description": "Use this method to create a genre",
+                "operationId": "createGenre",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Nom du genre",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Genre created",
+                        "schema": {
+                            "$ref": "#/definitions/Genre"
+                        }
+                    },
+                    "422": {
+                        "description": "Le champ 'Nom' est obligatoire."
+                    }
+                }
+            }
+        },
+        "/genre/{id_genre}": {
+            "get": {
+                "tags": [
+                    "genre"
+                ],
+                "summary": "Display a single genre",
+                "description": "Use this method to return a single genre attributes based on its id.",
+                "operationId": "showGenre",
+                "parameters": [
+                    {
+                        "name": "id_genre",
+                        "in": "path",
+                        "description": "id of genre to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Genre"
+                        }
+                    },
+                    "404": {
+                        "description": "Genre not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "genre"
+                ],
+                "summary": "Update a genre",
+                "description": "Use this method to update the attributes of a genre based on its id.",
+                "operationId": "updateGenre",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Nom du genre",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Genre updated",
+                        "schema": {
+                            "$ref": "#/definitions/Genre"
+                        }
+                    },
+                    "422": {
+                        "description": "Le champ 'Nom' est obligatoire."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "genre"
+                ],
+                "summary": "Delete a genre",
+                "description": "Use this method to delete a genre based on its id.",
+                "operationId": "deleteGenre",
+                "parameters": [
+                    {
+                        "name": "id_genre",
+                        "in": "path",
+                        "description": "Genre ID to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Genre deleted"
+                    },
+                    "404": {
+                        "description": "Invalid genre ID"
+                    }
+                }
+            }
+        },
+        "/personne": {
+            "get": {
+                "tags": [
+                    "personne"
+                ],
+                "summary": "Get a person list",
+                "description": "Use this method to return a listing of persons.",
+                "operationId": "listPersonne",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Personne"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "personne"
+                ],
+                "summary": "Create a person",
+                "description": "Use this method to create a new person.",
+                "operationId": "createPerson",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the person",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "prenom",
+                        "in": "formData",
+                        "description": "Firstname of the person",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "date_naissance",
+                        "in": "formData",
+                        "description": "Date of birth of the person",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Email of the person",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "adresse",
+                        "in": "formData",
+                        "description": "Address of the person",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "cpostal",
+                        "in": "formData",
+                        "description": "zipcode of the person",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "ville",
+                        "in": "formData",
+                        "description": "city of the person",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "pays",
+                        "in": "formData",
+                        "description": "country of the person",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Person created",
+                        "schema": {
+                            "$ref": "#/definitions/Personne"
+                        }
+                    },
+                    "422": {
+                        "description": "Champs manquant obligatoire ou incorrect"
+                    }
+                }
+            }
+        },
+        "/personne/{id_personne}": {
+            "get": {
+                "tags": [
+                    "personne"
+                ],
+                "summary": "Display a single person",
+                "description": "Use this method to return a single person attributes based on its id.",
+                "operationId": "showPerson",
+                "parameters": [
+                    {
+                        "name": "id_personne",
+                        "in": "path",
+                        "description": "id of person to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Personne"
+                        }
+                    },
+                    "404": {
+                        "description": "Person not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "personne"
+                ],
+                "summary": "Update a person",
+                "description": "Use this method to update the attributes of a person based on its id.",
+                "operationId": "updatePerson",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_personne",
+                        "in": "path",
+                        "description": "ID person",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "11"
+                    },
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the person",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "prenom",
+                        "in": "formData",
+                        "description": "Firstname of the person",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "date_naissance",
+                        "in": "formData",
+                        "description": "Date of birth of the person",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Email of the person",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "adresse",
+                        "in": "formData",
+                        "description": "Address of the person",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "cpostal",
+                        "in": "formData",
+                        "description": "zipcode of the person",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "ville",
+                        "in": "formData",
+                        "description": "city of the person",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "pays",
+                        "in": "formData",
+                        "description": "country of the person",
+                        "required": false,
+                        "type": "string",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Person updated",
+                        "schema": {
+                            "$ref": "#/definitions/Personne"
+                        }
+                    },
+                    "422": {
+                        "description": "Champs manquants obligatoires ou incorrects"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "personne"
+                ],
+                "summary": "Delete a Person",
+                "description": "Use this method to delete a person based on its id.",
+                "operationId": "deletePerson",
+                "parameters": [
+                    {
+                        "name": "id_personne",
+                        "in": "path",
+                        "description": "Person ID to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Person deleted"
+                    },
+                    "404": {
+                        "description": "Invalid person value"
+                    }
+                }
+            }
+        },
+        "/salle": {
+            "get": {
+                "tags": [
+                    "salle"
+                ],
+                "summary": "Display a listing of rooms.",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Salle"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "salle"
+                ],
+                "summary": "Create a room",
+                "description": "Use this method to create a room",
+                "operationId": "createRoom",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom_salle",
+                        "in": "formData",
+                        "description": "Nom de la salle",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "etage_salle",
+                        "in": "formData",
+                        "description": "Nombre d'\u00e9tages de la salle",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "places",
+                        "in": "formData",
+                        "description": "Nombre de places",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Room created",
+                        "schema": {
+                            "$ref": "#/definitions/Genre"
+                        }
+                    },
+                    "422": {
+                        "description": "Champ manquant obligatoire ou incorrect"
+                    }
+                }
+            }
+        },
+        "/salle/{id_salle}": {
+            "get": {
+                "tags": [
+                    "salle"
+                ],
+                "summary": "Display a single room",
+                "description": "Use this method to return a single room attributes based on its id.",
+                "operationId": "showRoom",
+                "parameters": [
+                    {
+                        "name": "id_salle",
+                        "in": "path",
+                        "description": "id of room to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Salle"
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "salle"
+                ],
+                "summary": "Update a room",
+                "description": "Use this method to update the attributes of a room",
+                "operationId": "updateRoom",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom_salle",
+                        "in": "path",
+                        "description": "Room ID",
+                        "type": "string"
+                    },
+                    {
+                        "name": "nom_salle",
+                        "in": "formData",
+                        "description": "Room's name",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "etage_salle",
+                        "in": "formData",
+                        "description": "Rooms' floor number",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "places",
+                        "in": "formData",
+                        "description": "Rooms' seats number",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room created",
+                        "schema": {
+                            "$ref": "#/definitions/Salle"
+                        }
+                    },
+                    "422": {
+                        "description": "Champ manquant obligatoire ou incorrect"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "salle"
+                ],
+                "summary": "Delete a room",
+                "description": "Use this method to delete a room based on its id.",
+                "operationId": "deleteRoom",
+                "parameters": [
+                    {
+                        "name": "id_salle",
+                        "in": "path",
+                        "description": "Room ID to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room deleted"
+                    },
+                    "404": {
+                        "description": "Invalid room ID"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -650,7 +1227,7 @@
                 "debut": {
                     "type": "date",
                     "format": "date",
-                    "default": "1992-01-01"
+                    "default": "2015-01-01"
                 }
             },
             "xml": {
@@ -671,32 +1248,32 @@
                 "nom": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "gimages"
                 },
                 "telephone": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "146952611"
                 },
                 "adresse": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "55 rue du faubourg Saint-Honor\u00e9"
                 },
                 "cpostal": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "75008"
                 },
                 "ville": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "Paris"
                 },
                 "pays": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "France"
                 }
             },
             "xml": {
@@ -722,7 +1299,7 @@
                 "id_fonction": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 6
                 }
             },
             "xml": {
@@ -737,47 +1314,47 @@
                 "id_film": {
                     "type": "number",
                     "format": "int64",
-                    "default": 42
+                    "default": 3451
                 },
                 "id_genre": {
                     "type": "number",
                     "format": "int64",
-                    "default": 0
+                    "default": 17
                 },
                 "id_distributeur": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 70
                 },
                 "titre": {
                     "type": "string",
                     "format": "string",
-                    "default": "Pulp Fiction"
+                    "default": "Hostel: Part II"
                 },
                 "resum": {
                     "type": "string",
                     "format": "string",
-                    "default": "Dans un caf\u00e9 restaurant de Los Angeles, dans la matin\u00e9e, un couple de jeunes braqueurs, Pumpkin et Yolanda, discutent des risques que comporte leur activit\u00e9. Ils se d\u00e9cident finalement \u00e0 attaquer le lieu, afin de pouvoir d\u00e9valiser \u00e0 la fois l'\u00e9tablissement et les clients."
+                    "default": "Three young women are lured into a Slovakian hostel.  Once there, they are subjected to all kinds of torture and hell...  Can they escape?"
                 },
                 "date_debut_affiche": {
                     "type": "date",
                     "format": "date",
-                    "default": "1994-01-01"
+                    "default": "2007-06-29"
                 },
                 "date_fin_affiche": {
                     "type": "date",
                     "format": "date",
-                    "default": "1994-04-01"
+                    "default": "2007-07-20"
                 },
                 "duree_minutes": {
                     "type": "number",
                     "format": "int64",
-                    "default": 154
+                    "default": 94
                 },
                 "annee_production": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1994
+                    "default": 2007
                 }
             },
             "xml": {
@@ -799,12 +1376,12 @@
                 "nom": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "g\u00e9rant"
                 },
                 "salaire": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "60000"
                 },
                 "cadre": {
                     "type": "tinyint",
@@ -832,22 +1409,22 @@
                 "nom": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "Forfait 1"
                 },
                 "resum": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "R\u00e9sum\u00e9 du forfait 1"
                 },
                 "prix": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 15
                 },
                 "duree_jours": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 3
                 }
             },
             "xml": {
@@ -862,12 +1439,12 @@
                 "id_genre": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 25
                 },
                 "nom": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "erotic"
                 }
             },
             "xml": {
@@ -899,7 +1476,7 @@
                 "date": {
                     "type": "date",
                     "format": "date",
-                    "default": ""
+                    "default": "2015-08-17"
                 }
             },
             "xml": {
@@ -932,12 +1509,12 @@
                 "date_inscription": {
                     "type": "date",
                     "format": "date",
-                    "default": ""
+                    "default": "2015-08-17"
                 },
                 "debut_abonnement": {
                     "type": "date",
                     "format": "date",
-                    "default": ""
+                    "default": "2015-09-01"
                 }
             },
             "xml": {
@@ -963,42 +1540,42 @@
                 "nom": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "SOLEVIC"
                 },
                 "prenom": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "alexis"
                 },
                 "date_naissance": {
                     "type": "date",
                     "format": "date",
-                    "default": ""
+                    "default": "1997-01-05"
                 },
                 "email": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "solevic.alexis@lycos.fr"
                 },
                 "adresse": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "1 rue Ketanou"
                 },
                 "cpostal": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "94170"
                 },
                 "ville": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "LE PERREUX SUR MARNE"
                 },
                 "pays": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "France"
                 }
             },
             "xml": {
@@ -1021,22 +1598,22 @@
                 "nom": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "Reduction 1"
                 },
                 "date_debut": {
                     "type": "date",
                     "format": "date",
-                    "default": ""
+                    "default": "2016-01-01"
                 },
                 "date_fin": {
                     "type": "date",
                     "format": "date",
-                    "default": ""
+                    "default": "2016-02-01"
                 },
                 "pourcentage_reduction": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 20
                 }
             },
             "xml": {
@@ -1064,17 +1641,17 @@
                 "nom_salle": {
                     "type": "string",
                     "format": "string",
-                    "default": ""
+                    "default": "Martin Scorsese"
                 },
                 "etage_salle": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 0
                 },
                 "places": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 135
                 }
             },
             "xml": {
@@ -1100,7 +1677,7 @@
                 "id_film": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 112
                 },
                 "id_salle": {
                     "type": "number",
@@ -1115,22 +1692,22 @@
                 "id_personne_technicien": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 2
                 },
                 "id_personne_menage": {
                     "type": "number",
                     "format": "int64",
-                    "default": 1
+                    "default": 3
                 },
                 "debut_seance": {
                     "type": "date",
                     "format": "date",
-                    "default": ""
+                    "default": "2016-04-04 10:25:00"
                 },
                 "fin_seance": {
                     "type": "date",
                     "format": "date",
-                    "default": ""
+                    "default": "2016-04-04 12:05:00"
                 }
             },
             "xml": {
