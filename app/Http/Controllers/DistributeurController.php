@@ -176,14 +176,6 @@ class DistributeurController extends Controller
      *     tags={"distributeur"},
      *     @SWG\Parameter(
      *         description="Nom du distributeur",
-     *         in="path",
-     *         name="id_distributeur",
-     *         required=true,
-     *         type="integer",
-     *         maximum="11"
-     *     ),
-     *     @SWG\Parameter(
-     *         description="Nom du distributeur",
      *         in="formData",
      *         name="nom",
      *         required=true,
@@ -245,8 +237,6 @@ class DistributeurController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $distributeur = Distributeur::find($id);
-
         $validator = Validator::make($request->all(), [
             'nom' => 'required|unique:distributeurs|max:255',
             'telephone' => 'required|max:255'
@@ -258,6 +248,7 @@ class DistributeurController extends Controller
                 422);
         }
 
+        $distributeur = Distributeur::find($id);
         $distributeur->nom = $request->nom;
         $distributeur->adresse = $request->adresse;
         $distributeur->cpostal = $request->cpostal;

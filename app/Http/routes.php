@@ -15,10 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('abonnement', 'AbonnementController');
-Route::resource('distributeur', 'DistributeurController');
-Route::resource('employe', 'EmployeController');
-Route::resource('film', 'FilmController');
+Route::group(['middleware' => 'jwt.auth'], function(){
+    Route::resource('film', 'FilmController');
+    Route::resource('employe', 'EmployeController');
 Route::resource('fonction', 'FonctionController');
 Route::resource('forfait', 'ForfaitController');
 Route::resource('genre', 'GenreController');
@@ -28,3 +27,15 @@ Route::resource('personne', 'PersonneController');
 Route::resource('reduction', 'ReductionController');
 Route::resource('salle', 'SalleController');
 Route::resource('seance', 'SeanceController');
+});
+
+Route::resource('distributeur', 'DistributeurController');
+
+
+Route::post('authenticate', [
+    'as' => 'authenticate', 'uses' => 'JWTController@authenticate'
+]);
+
+Route::post('hashPassword', [
+    'as' => 'hashPassword', 'uses' => 'JWTController@hashPassword'
+]);

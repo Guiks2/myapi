@@ -200,7 +200,7 @@ class SalleController extends Controller
                 422);
         }
 
-        $salle = new Salle;
+        $salle = Salle::find($id);
         $salle->nom_salle = $request->nom_salle;
         $salle->etage_salle = $request->etage_salle;
         $salle->places = $request->places;
