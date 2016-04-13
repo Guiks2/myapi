@@ -16,12 +16,21 @@ Route::get('/', function () {
 });
 
 Route::group(['middleware' => 'jwt.auth'], function(){
-
     Route::resource('film', 'FilmController');
+    Route::resource('employe', 'EmployeController');
+Route::resource('fonction', 'FonctionController');
+Route::resource('forfait', 'ForfaitController');
+Route::resource('genre', 'GenreController');
+Route::resource('historique_membre', 'HistoriqueMembreController');
+Route::resource('membre', 'MembreController');
+Route::resource('personne', 'PersonneController');
+Route::resource('reduction', 'ReductionController');
+Route::resource('salle', 'SalleController');
+Route::resource('seance', 'SeanceController');
 });
 
-
 Route::resource('distributeur', 'DistributeurController');
+
 
 Route::post('authenticate', [
     'as' => 'authenticate', 'uses' => 'JWTController@authenticate'

@@ -122,7 +122,7 @@ class FilmController extends Controller
                 'date_fin_affiche' => 'required|date|after:'.$request->date_debut_affiche,
                 'duree_minutes' => 'required|numeric',
                 'annee_production' => 'required|digits:4'
-
+        ]);
                 ]);
 
             if($validator->fails()){
@@ -239,20 +239,47 @@ class FilmController extends Controller
      *         maximum="4"
      *     ),
      *     @SWG\Response(
-     *         response=201,
-     *         description="Film updated"
+     *         response=200,
+     *         description="Film updated",
+     *         @SWG\Schema(
+     *              ref="#/definitions/Film",
+     *         ),
      *     ),
      *     @SWG\Response(
      *         response=422,
-     *         description="Champs manquant obligatoire ou incorrect"
-     *     )
+     *         description="Champs manquants obligatoires ou incorrects"
+     *     ),
      * )
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'titre' => 'required|unique:films|max:255',
+            'resum' => 'required|max:255',
+            'date_debut_affiche' => 'required|date|before:'.$request->date_fin_affiche,
+            'date_fin_affiche' => 'required|date|after:'.$request->date_debut_affiche,
+            'duree_minutes' => 'required|numeric',
+            'annee_production' => 'required|digits:4'
+        ]);
+
+        if($validator->fails()){
+            return response()->json(
+                ['errors' => $validator->errors()->all()],
+                422);
+        }
+
         $film = Film::find($id);
         $film->titre = $request->titre;
+        $film->resum = $request->resum;
+        $film->date_debut_affiche = $request->date_debut_affiche;
+        $film->date_fin_affiche = $request->date_fin_affiche;
+        $film->duree_minutes = $request->duree_minutes;
+        $film->annee_production = $request->annee_production;
         $film->save();
+
+        return response()->json(
+            $film,
+            200);
     }
 
 
