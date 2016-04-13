@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class FilmController extends Controller
 {
@@ -105,34 +109,41 @@ class FilmController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'titre' => 'required|unique:films|max:255',
-            'resum' => 'required|max:255',
-            'date_debut_affiche' => 'required|date|before:'.$request->date_fin_affiche,
-            'date_fin_affiche' => 'required|date|after:'.$request->date_debut_affiche,
-            'duree_minutes' => 'required|numeric',
-            'annee_production' => 'required|digits:4'
-
-            ]);
-
-        if($validator->fails()){
+        $user = JWTAuth::parseToken()->authenticate();
+        if ($user->type != 1){
             return response()->json(
-                ['errors' => $validator->errors()->all()],
-                422);
+                ['error' => 'You don\'t have authorization for this content'],
+                403);
+        } else {
+            $validator = Validator::make($request->all(), [
+                'titre' => 'required|unique:films|max:255',
+                'resum' => 'required|max:255',
+                'date_debut_affiche' => 'required|date|before:'.$request->date_fin_affiche,
+                'date_fin_affiche' => 'required|date|after:'.$request->date_debut_affiche,
+                'duree_minutes' => 'required|numeric',
+                'annee_production' => 'required|digits:4'
+
+                ]);
+
+            if($validator->fails()){
+                return response()->json(
+                    ['errors' => $validator->errors()->all()],
+                    422);
+            }
+
+            $film = new Film;
+            $film->titre = $request->titre;
+            $film->resum = $request->resum;
+            $film->date_debut_affiche = $request->date_debut_affiche;
+            $film->date_fin_affiche = $request->date_fin_affiche;
+            $film->duree_minutes = $request->duree_minutes;
+            $film->annee_production = $request->annee_production;
+            $film->save();
+
+            return response()->json(
+                $film,
+                201);
         }
-
-        $film = new Film;
-        $film->titre = $request->titre;
-        $film->resum = $request->resum;
-        $film->date_debut_affiche = $request->date_debut_affiche;
-        $film->date_fin_affiche = $request->date_fin_affiche;
-        $film->duree_minutes = $request->duree_minutes;
-        $film->annee_production = $request->annee_production;
-        $film->save();
-
-        return response()->json(
-            $film,
-            201);
     }
 
     /**
@@ -167,7 +178,7 @@ class FilmController extends Controller
 
         if(empty($film)){
             return response()->json(
-                ['error' => 'this film does not exist'],
+                ['error' => 'This film does not exist'],
                 404);
         }
         return $film;
@@ -274,14 +285,21 @@ class FilmController extends Controller
      */
     public function destroy($id)
     {
-        $film = Film::find($id);
-
-        if(empty($film)){
+        $user = JWTAuth::parseToken()->authenticate();
+        if ($user->type != 1){
             return response()->json(
-                ['error' => 'this film does not exist'],
-                404);
-        }
+                ['error' => 'You don\'t have authorization for this content'],
+                403);
+        } else {
+            $film = Film::find($id);
 
-        $film->delete();
+            if (empty($film)) {
+                return response()->json(
+                    ['error' => 'this film does not exist'],
+                    404);
+            }
+
+            $film->delete();
+        }
     }
 }

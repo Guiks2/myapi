@@ -15,5 +15,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('film', 'FilmController');
+Route::group(['middleware' => 'jwt.auth'], function(){
+
+    Route::resource('film', 'FilmController');
+});
+
+
 Route::resource('distributeur', 'DistributeurController');
+
+Route::post('authenticate', [
+    'as' => 'authenticate', 'uses' => 'JWTController@authenticate'
+]);
+
+Route::post('hashPassword', [
+    'as' => 'hashPassword', 'uses' => 'JWTController@hashPassword'
+]);
