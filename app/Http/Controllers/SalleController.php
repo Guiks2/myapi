@@ -89,8 +89,11 @@ class SalleController extends Controller
         }
 
         $salle = new Salle;
-        $salle->nom = $request->nom;
-
+        $salle->nom_salle = $request->nom_salle;
+        $salle->etage_salle = $request->etage_salle;
+        $salle->places = $request->places;
+        $salle->save();
+        
         return response()->json(
             $salle,
             201);
@@ -198,7 +201,10 @@ class SalleController extends Controller
         }
 
         $salle = new Salle;
-        $salle->nom = $request->nom;
+        $salle->nom_salle = $request->nom_salle;
+        $salle->etage_salle = $request->etage_salle;
+        $salle->places = $request->places;
+        $salle->save();
 
         return response()->json(
             $salle,

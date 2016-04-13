@@ -74,6 +74,7 @@ class GenreController extends Controller
 
         $genre = new Genre;
         $genre->nom = $request->nom;
+        $genre->save();
 
         return response()->json(
             $genre,
@@ -161,7 +162,8 @@ class GenreController extends Controller
 
         $genre = new Genre;
         $genre->nom = $request->nom;
-
+        $genre->save();
+        
         return response()->json(
             $genre,
             200);
