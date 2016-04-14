@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -29,11 +30,20 @@ class SeanceController extends Controller
      *              @SWG\Items(ref="#/definitions/Seance")
      *          ),
      *     ),
+     *     @SWG\Response(
+     *         response=204,
+     *         description="The request didn't return any content.",
+     *     ),
      *  )
      */
     public function index()
     {
         $seances = Seance::all();
+
+        if ($seances->isEmpty()) {
+            return response()->json("The request didn't return any content.", 204);
+        }
+
         return $seances;
     }
 
@@ -41,7 +51,7 @@ class SeanceController extends Controller
      * @SWG\Post(
      *     path="/seance",
      *     summary="Create a seance",
-     *     description="Use this method to create a seance",
+     *     description="Use this method to create a seance. Including a check of the avaibility of the timeslot.",
      *     operationId="storeSeance",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"seance"},
@@ -104,6 +114,10 @@ class SeanceController extends Controller
      *         ),
      *     ),
      *     @SWG\Response(
+     *         response=400,
+     *         description="Timeslot chosen is not available for this room",
+     *     ),
+     *     @SWG\Response(
      *         response=422,
      *         description="Missing or incorrect fields",
      *     )
@@ -117,8 +131,8 @@ class SeanceController extends Controller
             'id_personne_ouvreur' => 'required|numeric|exists:personnes,id_personne',
             'id_personne_technicien' => 'required|numeric|exists:personnes,id_personne',
             'id_personne_menage' => 'required|numeric|exists:personnes,id_personne',
-            'debut_seance' => 'required|max:255',
-            'fin_seance' => 'required|max:255'
+            'debut_seance' => 'required|date|before:fin_seance',
+            'fin_seance' => 'required|date|after:debut_seance'
         ]);
 
         if($validator->fails()){
@@ -135,11 +149,34 @@ class SeanceController extends Controller
         $seance->id_personne_menage = $request->id_personne_menage;
         $seance->debut_seance = $request->debut_seance;
         $seance->fin_seance = $request->fin_seance;
-        $seance->save();
-        
-        return response()->json(
-            $seance,
-            201);
+
+        $seances = Seance::where('id_salle', $seance->id_salle)
+        ->where(function($query) use ($seance){
+            $query->where('debut_seance', '>=', $seance->debut_seance)
+                ->where('debut_seance', '<=', $seance->fin_seance);
+        })
+        ->orWhere(function($query) use ($seance){
+            $query->where('fin_seance', '>=', $seance->debut_seance)
+            ->where('fin_seance', '<=', $seance->fin_seance);
+        })
+        ->orWhere(function($query) use ($seance){
+            $query->where('debut_seance', '<=', $seance->debut_seance)
+                ->where('fin_seance', '>=', $seance->fin_seance);
+        })
+        ->get();
+
+        if($seances->isEmpty()){
+            $seance->save();
+
+            return response()->json(
+                $seance,
+                201);
+
+        } else {
+            return response()->json(
+                'Timeslot chosen is not available for this room',
+            400);
+        }
     }
 
     /**
@@ -186,7 +223,7 @@ class SeanceController extends Controller
      * @SWG\Put(
      *     path="/seance/{id_seance}",
      *     summary="Update a seance",
-     *     description="Use this method to update the attributes of a seance based on its id.",
+     *     description="Use this method to update the attributes of a seance based on its id. Including a check of the avaibility of the timeslot.",
      *     operationId="updateSeance",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"seance"},
@@ -232,6 +269,8 @@ class SeanceController extends Controller
      *         in="formData",
      *         name="debut_seance",
      *         type="string",
+     *         required=true,
+     *         format="date",
      *         maximum="255" 
      *     ),
      *     @SWG\Parameter(
@@ -239,6 +278,8 @@ class SeanceController extends Controller
      *         in="formData",
      *         name="fin_seance",
      *         type="string",
+     *         required=true,
+     *         format="date",
      *         maximum="255" 
      *     ),
      *     @SWG\Response(
@@ -247,6 +288,10 @@ class SeanceController extends Controller
      *         @SWG\Schema(
      *              ref="#/definitions/Seance",
      *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=404, 
+     *         description="Seance not found"
      *     ),
      *     @SWG\Response(
      *         response=422,
@@ -262,8 +307,8 @@ class SeanceController extends Controller
             'id_personne_ouvreur' => 'numeric|exists:personnes',
             'id_personne_technicien' => 'numeric|exists:personnes',
             'id_personne_menage' => 'numeric|exists:personnes',
-            'debut_seance' => 'max:255',
-            'fin_seance' => 'max:255'
+            'debut_seance' => 'required|date|before:fin_seance',
+            'fin_seance' => 'required|date|after:debut_seance'
         ]);
 
         if($validator->fails()){
@@ -285,11 +330,36 @@ class SeanceController extends Controller
         $seance->id_personne_menage = $request->id_personne_menage != null ? $request->id_personne_menage : $seance->id_personne_menage;
         $seance->debut_seance = $request->debut_seance != null ? $request->debut_seance : $seance->debut_seance;
         $seance->fin_seance = $request->fin_seance != null ? $request->fin_seance : $seance->fin_seance;
-        $seance->save();
 
-        return response()->json(
-            $seance,
-            200);
+        $seances = Seance::where('id_salle', $seance->id_salle)
+        ->whereNotIn('id', [$seance->id])
+        ->where(function($query) use ($seance){
+            $query->where('debut_seance', '>=', $seance->debut_seance)
+                ->where('debut_seance', '<=', $seance->fin_seance)
+                ->orWhere(function($query) use ($seance){
+                    $query->where('fin_seance', '>=', $seance->debut_seance)
+                        ->where('fin_seance', '<=', $seance->fin_seance);
+                })
+                ->orWhere(function($query) use ($seance){
+                    $query->where('debut_seance', '<=', $seance->debut_seance)
+                        ->where('fin_seance', '>=', $seance->fin_seance);
+                });
+        })
+        ->get();
+
+
+        if($seances->isEmpty()){
+            $seance->save();
+
+            return response()->json(
+                $seance,
+                200);
+
+        } else {
+            return response()->json(
+                'Timeslot chosen is not available for this room',
+            400);  
+        }
     }
 
      /**
