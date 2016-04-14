@@ -14,6 +14,7 @@ class SalleController extends Controller
      * @SWG\Get(
      *     path="/salle",
      *     summary="Display a listing of rooms.",
+     *     operationId="indexSalle",
      *     tags={"salle"},
      *     @SWG\Response(
      *          response=200,
@@ -23,11 +24,20 @@ class SalleController extends Controller
      *              @SWG\Items(ref="#/definitions/Salle")
      *          ),
      *     ),
+     *     @SWG\Response(
+     *         response=204,
+     *         description="The request didn't return any content.",
+     *     ),
      *  )
      */
     public function index()
     {
         $salles = Salle::all();
+
+        if ($salles->isEmpty()) {
+            return response()->json("The request didn't return any content.", 204);
+        }
+
         return $salles;
     }
 
@@ -36,11 +46,18 @@ class SalleController extends Controller
      *     path="/salle",
      *     summary="Create a room",
      *     description="Use this method to create a room",
-     *     operationId="createRoom",
+     *     operationId="storeSalle",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"salle"},
      *     @SWG\Parameter(
-     *         description="Nom de la salle",
+     *         description="Room number",
+     *         in="formData",
+     *         name="numero_salle",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Name of the room",
      *         in="formData",
      *         name="nom_salle",
      *         required=true,
@@ -48,14 +65,14 @@ class SalleController extends Controller
      *         maximum="255"
      *     ),
      *     @SWG\Parameter(
-     *         description="Nombre d'étages de la salle",
+     *         description="Floor number",
      *         in="formData",
      *         name="etage_salle",
      *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         description="Nombre de places",
+     *         description="Seats number",
      *         in="formData",
      *         name="places",
      *         required=true,
@@ -65,18 +82,19 @@ class SalleController extends Controller
      *         response=201,
      *         description="Room created",
      *         @SWG\Schema(
-     *              ref="#/definitions/Genre",
+     *              ref="#/definitions/Salle",
      *         ),
      *     ),
      *     @SWG\Response(
      *         response=422,
-     *         description="Champ manquant obligatoire ou incorrect",
+     *         description="Missing or incorrect fields",
      *     )
      * )
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'numero_salle' => 'required|unique:salles|numeric',
             'nom_salle' => 'required|unique:salles|max:255',
             'etage_salle' => 'required|numeric',
             'places' => 'required|numeric'
@@ -89,6 +107,7 @@ class SalleController extends Controller
         }
 
         $salle = new Salle;
+        $salle->numero_salle = $request->numero_salle;
         $salle->nom_salle = $request->nom_salle;
         $salle->etage_salle = $request->etage_salle;
         $salle->places = $request->places;
@@ -104,13 +123,14 @@ class SalleController extends Controller
      *      path="/salle/{id_salle}",
      *      summary="Display a single room",
      *      description="Use this method to return a single room attributes based on its id.",
-     *      operationId="showRoom",
+     *      operationId="showSalle",
      *      tags={"salle"},
      *      @SWG\Parameter(
      *          name="id_salle",
      *          in="path", 
      *          type="integer",
-     *          description="id of room to fetch",
+     *          required=true,
+     *          description="Room ID",
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -122,7 +142,7 @@ class SalleController extends Controller
      *      @SWG\Response(
      *           response=404, 
      *           description="Room not found"
-     *       ),
+     *      ),
      * )
      */
     public function show($id)
@@ -131,7 +151,7 @@ class SalleController extends Controller
 
         if(empty($salle)){
             return response()->json(
-                ['error' => 'This room does not exist'],
+                ['error' => 'Room not found'],
                 404);
         }
         return $salle;
@@ -142,35 +162,40 @@ class SalleController extends Controller
      *     path="/salle/{id_salle}",
      *     summary="Update a room",
      *     description="Use this method to update the attributes of a room",
-     *     operationId="updateRoom",
+     *     operationId="updateSalle",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"salle"},
      *      @SWG\Parameter(
-     *         name="nom_salle",
+     *         name="id_salle",
      *         in="path",
      *         type="string",
+     *         required=true,
      *         description="Room ID"
      *     ),
      *     @SWG\Parameter(
-     *         description="Room's name",
+     *         description="Room number",
      *         in="formData",
-     *         name="nom_salle",
-     *         required=true,
-     *         type="string",
-     *         maximum="255"
-     *     ),
-     *     @SWG\Parameter(
-     *         description="Rooms' floor number",
-     *         in="formData",
-     *         name="etage_salle",
+     *         name="numero_salle",
      *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         description="Rooms' seats number",
+     *         description="Name of the room",
+     *         in="formData",
+     *         name="nom_salle",
+     *         type="string",
+     *         maximum="255"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Floor number",
+     *         in="formData",
+     *         name="etage_salle",
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Seats number",
      *         in="formData",
      *         name="places",
-     *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Response(
@@ -182,16 +207,21 @@ class SalleController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=422,
-     *         description="Champ manquant obligatoire ou incorrect",
-     *     )
+     *         description="Missing or incorrect fields",
+     *     ),
+     *     @SWG\Response(
+     *         response=404, 
+     *         description="Room not found"
+     *     ),
      * )
      */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nom_salle' => 'required|unique:salles|max:255',
-            'etage_salle' => 'required|numeric',
-            'places' => 'required|numeric'
+            'numero_salle' => 'unique:salles|numeric',
+            'nom_salle' => 'unique:salles|max:255',
+            'etage_salle' => 'numeric',
+            'places' => 'numeric'
         ]);
 
         if($validator->fails()){
@@ -201,9 +231,17 @@ class SalleController extends Controller
         }
 
         $salle = Salle::find($id);
-        $salle->nom_salle = $request->nom_salle;
-        $salle->etage_salle = $request->etage_salle;
-        $salle->places = $request->places;
+
+        if(empty($salle)){
+            return response()->json(
+                ['error' => 'Room not found'],
+                404);
+        }
+
+        $salle->numero_salle = $request->numero_salle != null ? $request->numero_salle : $salle->numero_salle;
+        $salle->nom_salle = $request->nom_salle != null ? $request->nom_salle : $salle->nom_salle;
+        $salle->etage_salle = $request->etage_salle != null ? $request->etage_salle : $salle->etage_salle;
+        $salle->places = $request->places != null ? $request->places : $salle->places;
         $salle->save();
 
         return response()->json(
@@ -216,10 +254,10 @@ class SalleController extends Controller
      *     path="/salle/{id_salle}",
      *     summary="Delete a room",
      *     description="Use this method to delete a room based on its id.",
-     *     operationId="deleteRoom",
+     *     operationId="destroySalle",
      *     tags={"salle"},
      *     @SWG\Parameter(
-     *         description="Room ID to delete",
+     *         description="Room ID",
      *         in="path",
      *         name="id_salle",
      *         required=true,
@@ -232,7 +270,7 @@ class SalleController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=404,
-     *         description="Invalid room ID"
+     *         description="Room not found"
      *     )
      *
      * )
@@ -243,7 +281,7 @@ class SalleController extends Controller
 
         if(empty($salle)){
             return response()->json(
-                ['error' => 'This room does not exist'],
+                ['error' => 'Room not found'],
                 404);
         }
 
