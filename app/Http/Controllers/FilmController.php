@@ -147,8 +147,8 @@ class FilmController extends Controller
                 'id_distributeur' => 'exists:distributeurs|numeric',
                 'titre' => 'required|unique:films|max:255',
                 'resum' => 'max:255',
-                'date_debut_affiche' => 'required|date|before:date_fin_affiche',
-                'date_fin_affiche' => 'required|date|after:date_debut_affiche',
+                'date_debut_affiche' => 'date|before:date_fin_affiche',
+                'date_fin_affiche' => 'date|after:date_debut_affiche',
                 'duree_minutes' => 'numeric',
                 'annee_production' => 'digits:4'
             ]);
@@ -313,8 +313,8 @@ class FilmController extends Controller
                 'id_distributeur' => 'exists:distributeurs|numeric',
                 'titre' => 'unique:films|max:255',
                 'resum' => 'max:255',
-                'date_debut_affiche' => 'date|before:' . $request->date_fin_affiche,
-                'date_fin_affiche' => 'date|after:' . $request->date_debut_affiche,
+                'date_debut_affiche' => 'date|before:date_fin_affiche',
+                'date_fin_affiche' => 'date|after:date_debut_affiche',
                 'duree_minutes' => 'numeric',
                 'annee_production' => 'digits:4'
             ]);
