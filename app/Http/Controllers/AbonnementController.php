@@ -6,6 +6,8 @@ use App\Abonnement;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Validator;
 
 class AbonnementController extends Controller
 {
@@ -33,6 +35,9 @@ class AbonnementController extends Controller
     public function index()
     {
         $abonnements = Abonnement::all();
+        if ($abonnements->isEmpty()) {
+            return response()->json("The request didn't return any content.", 204);
+        }
         return $abonnements;
     }
 
@@ -85,7 +90,7 @@ class AbonnementController extends Controller
                 403);
         } else {
             $validator = Validator::make($request->all(), [
-                'id_forfait' => 'required|unique:forfaits',
+                'id_forfait' => 'required|exists:forfaits',
                 'debut' => 'required|date'
             ]);
 
@@ -260,6 +265,10 @@ class AbonnementController extends Controller
             }
 
             $abonnement->delete();
+
+            return response()->json(
+                'Successfully deleted',
+                200);
         }
     }
 }

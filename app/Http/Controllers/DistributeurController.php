@@ -23,11 +23,18 @@ class DistributeurController extends Controller
      *              @SWG\Items(ref="#/definitions/Distributeur")
      *          ),
      *     ),
+     *     @SWG\Response(
+     *         response=204,
+     *         description="The request didn't return any content.",
+     *     ),
      *  )
      */
     public function index()
     {
         $distributeurs = Distributeur::all();
+        if ($distributeurs->isEmpty()) {
+            return response()->json("The request didn't return any content.", 204);
+        }
         return $distributeurs;
     }
 
@@ -257,6 +264,12 @@ class DistributeurController extends Controller
         }
 
         $distributeur = Distributeur::find($id);
+        if(empty($distributeur)){
+            return response()->json(
+                ['error' => 'Movie not found'],
+                404);
+        }
+
         $distributeur->nom = $request->nom;
         $distributeur->adresse = $request->adresse;
         $distributeur->cpostal = $request->cpostal;
@@ -307,5 +320,9 @@ class DistributeurController extends Controller
         }
 
         $distributeur->delete();
+
+        return response()->json(
+            'Successfully deleted',
+            200);
     }
 }
