@@ -479,7 +479,7 @@ class SeanceController extends Controller
             $date_debut = $request->date_debut;
         }
         if(empty($request->date_fin) || $date_debut > $request->date_fin){
-            $date_fin = date('Y-m-d', '+1 day').' 00:00:00';
+            $date_fin = date('+1 day').' 00:00:00';
         } else {
             $date_fin = $request->date_fin;
         }
