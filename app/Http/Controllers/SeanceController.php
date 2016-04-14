@@ -20,6 +20,7 @@ class SeanceController extends Controller
      *     path="/seance",
      *     summary="Display a listing of seances.",
      *     tags={"seance"},
+     *     operationId="indexSeance",
      *     @SWG\Response(
      *          response=200,
      *          description="Successful operation",
@@ -41,46 +42,43 @@ class SeanceController extends Controller
      *     path="/seance",
      *     summary="Create a seance",
      *     description="Use this method to create a seance",
-     *     operationId="createSeance",
+     *     operationId="storeSeance",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"seance"},
      *     @SWG\Parameter(
-     *         description="ID of the movie",
+     *         description="Movie ID",
      *         in="formData",
      *         name="id_film",
      *         required=true,
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="ID of the room",
+     *         description="Room ID",
      *         in="formData",
      *         name="id_salle",
      *         required=true,
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="ID of the opener person",
+     *         description="Room ID",
      *         in="formData",
      *         name="id_personne_ouvreur",
-     *         required=true,
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="ID of the tech person",
+     *         description="Technician guy ID",
      *         in="formData",
      *         name="id_personne_technicien",
-     *         required=true,
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="ID of the cleaning person",
+     *         description="Cleaning guy ID",
      *         in="formData",
      *         name="id_personne_menage",
-     *         required=true,
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="Starting time of the seance",
+     *         description="Starting time",
      *         in="formData",
      *         name="debut_seance",
      *         required=true,
@@ -88,10 +86,9 @@ class SeanceController extends Controller
      *         maximum="255" 
      *     ),
      *     @SWG\Parameter(
-     *         description="Ending time of the seance",
+     *         description="Ending time",
      *         in="formData",
      *         name="fin_seance",
-     *         required=true,
      *         type="string",
      *         maximum="255" 
      *     ),
@@ -104,7 +101,7 @@ class SeanceController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=422,
-     *         description="Missing required fields",
+     *         description="Missing or incorrect fields",
      *     )
      * )
      */
@@ -113,11 +110,11 @@ class SeanceController extends Controller
         $validator = Validator::make($request->all(), [
             'id_film' => 'required|numeric|exists:films',
             'id_salle' => 'required|numeric|exists:salles',
-            'id_personne_ouvreur' => 'required|numeric|exists:personnes,id_personne',
-            'id_personne_technicien' => 'required|numeric|exists:personnes,id_personne',
-            'id_personne_menage' => 'required|numeric|exists:personnes,id_personne',
+            'id_personne_ouvreur' => 'numeric|exists:personnes,id_personne',
+            'id_personne_technicien' => 'numeric|exists:personnes,id_personne',
+            'id_personne_menage' => 'numeric|exists:personnes,id_personne',
             'debut_seance' => 'required|max:255',
-            'fin_seance' => 'required|max:255'
+            'fin_seance' => 'max:255'
         ]);
 
         if($validator->fails()){
@@ -152,7 +149,8 @@ class SeanceController extends Controller
      *          name="id_seance",
      *          in="path", 
      *          type="integer",
-     *          description="id of seance to fetch",
+     *          required=true,
+     *          description="Seance ID",
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -189,50 +187,51 @@ class SeanceController extends Controller
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"seance"},
      *     @SWG\Parameter(
-     *         description="ID of the seance",
+     *         description="Seance ID",
      *         in="path",
      *         name="id_seance",
+     *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         description="ID of the movie",
+     *         description="Movie ID",
      *         in="formData",
      *         name="id_film",
      *         type="integer"
      *     ), 
      *     @SWG\Parameter(
-     *         description="ID of the room",
+     *         description="Room ID",
      *         in="formData",
      *         name="id_salle",
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="ID of the opener person",
+     *         description="Opener ID",
      *         in="formData",
      *         name="id_personne_ouvreur",
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="ID of the tech person",
+     *         description="Technician ID",
      *         in="formData",
      *         name="id_personne_technicien",
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="ID of the cleaning person",
+     *         description="Cleaning ID",
      *         in="formData",
      *         name="id_personne_menage",
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
-     *         description="Starting time of the seance",
+     *         description="Starting time",
      *         in="formData",
      *         name="debut_seance",
      *         type="string",
      *         maximum="255" 
      *     ),
      *     @SWG\Parameter(
-     *         description="Ending time of the seance",
+     *         description="Ending time",
      *         in="formData",
      *         name="fin_seance",
      *         type="string",
@@ -247,7 +246,7 @@ class SeanceController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=422,
-     *         description="Champs manquants obligatoires ou incorrects"
+     *         description="Missing or incorrect fields"
      *     ),
      * )
      */
@@ -289,10 +288,10 @@ class SeanceController extends Controller
      *     path="/seance/{id_seance}",
      *     summary="Delete a seance",
      *     description="Use this method to delete a seance based on its id.",
-     *     operationId="deleteSeance",
+     *     operationId="destroySeance",
      *     tags={"seance"},
      *     @SWG\Parameter(
-     *         description="Seance ID to delete",
+     *         description="Seance ID",
      *         in="path",
      *         name="id_seance",
      *         required=true,
@@ -305,7 +304,7 @@ class SeanceController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=404,
-     *         description="Invalid seance value"
+     *         description="Seance not found"
      *     )
      *
      * )
@@ -315,14 +314,15 @@ class SeanceController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service.'],
                 403);
         } else {
-            $film = Seance::find($id);
+
+            $seance = Seance::find($id);
 
             if (empty($seance)) {
                 return response()->json(
-                    ['error' => 'this seance does not exist'],
+                    ['error' => 'Seance not found'],
                     404);
             }
 
@@ -333,12 +333,12 @@ class SeanceController extends Controller
     /**
      * @SWG\Get(
      *     path="/seance/film/{id_film}",
-     *     summary="Display next seances by id Film",
+     *     summary="Display next seances by film id",
      *     description="Use this method to return a listing of next seances based on film id and dates.",
      *     operationId="getSeancesByIdFilm",
      *     tags={"seance"},
      *     @SWG\Parameter(
-     *         description="ID of film to get seances",
+     *         description="Film ID",
      *         in="path",
      *         name="id_film",
      *         required=true,
@@ -346,14 +346,14 @@ class SeanceController extends Controller
      *         format="int64"
      *     ),
      *     @SWG\Parameter(
-     *         description="Beginning date to get seances",
+     *         description="Starting time",
      *         in="query",
      *         name="date_debut",
      *         type="string",
      *         format="date"
      *     ),
      *     @SWG\Parameter(
-     *         description="Ending date to get seances",
+     *         description="Ending time",
      *         in="query",
      *         name="date_fin",
      *         type="string",
