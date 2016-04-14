@@ -283,6 +283,9 @@ class FonctionController extends Controller
             }
 
             $fonction->delete();
+            return response()->json(
+                'Successfully deleted',
+                200);
         }
     }
 }

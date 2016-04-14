@@ -85,8 +85,8 @@ class EmployeController extends Controller
                 403);
         } else {
             $validator = Validator::make($request->all(), [
-                'id_personne' => 'required|numeric',
-                'id_fonction' => 'required|numeric',
+                'id_personne' => 'required|exists:personnes|numeric',
+                'id_fonction' => 'required|exists:fonctions|numeric',
             ]);
 
             if($validator->fails()){
@@ -183,6 +183,10 @@ class EmployeController extends Controller
      *         description="You're not allowed to access this service."
      *     ),
      *     @SWG\Response(
+     *         response=404,
+     *         description="This employee can not be found."
+     *     ),
+     *     @SWG\Response(
      *         response=422,
      *         description="Missing or incorrect fields"
      *     ),
@@ -208,6 +212,11 @@ class EmployeController extends Controller
             }
 
             $employe = Employe::find($id);
+            if(empty($employe)){
+                return response()->json(
+                    ['error' => 'Employee not found'],
+                    404);
+            }
             $employe->id_personne = $request->id_personne != null ? $request->id_personne : $employe->id_personne;
             $employe->id_fonction = $request->id_fonction != null ? $request->id_fonction : $employe->id_fonction;
             $employe->save();
@@ -265,6 +274,9 @@ class EmployeController extends Controller
             }
 
             $employe->delete();
+            return response()->json(
+                'Successfully deleted',
+                200);
         }
     }
 }
