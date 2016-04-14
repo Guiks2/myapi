@@ -16,7 +16,7 @@ class AbonnementController extends Controller
      *     path="/abonnement",
      *     summary="Get subscription list",
      *     description="Use this method to return a listing of subscriptions.",
-     *     operationId="listSubscription",
+     *     operationId="indexAbonnement",
      *     tags={"abonnement"},
      *     @SWG\Response(
      *          response=200,
@@ -47,18 +47,18 @@ class AbonnementController extends Controller
      *     path="/abonnement",
      *     summary="Create a subscription",
      *     description="Use this method to create a new subscription.",
-     *     operationId="createSubscription",
+     *     operationId="storeAbonnement",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"abonnement"},
      *     @SWG\Parameter(
-     *         description="Id of the forfait",
+     *         description="Forfait ID",
      *         in="formData",
      *         name="id_forfait",
      *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         description="Initial date of the subscription",
+     *         description="Initial date",
      *         in="formData",
      *         name="debut",
      *         required=true,
@@ -66,7 +66,7 @@ class AbonnementController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=403,
-     *         description="You don't have authorization for this content"
+     *         description="You're not allowed to access this service."
      *     ),
      *     @SWG\Response(
      *          response=201,
@@ -77,7 +77,7 @@ class AbonnementController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=422,
-     *         description="Champs manquant obligatoire ou incorrect"
+     *         description="Missing or incorrect fields"
      *     )
      * )
      */
@@ -86,11 +86,11 @@ class AbonnementController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service.'],
                 403);
         } else {
             $validator = Validator::make($request->all(), [
-                'id_forfait' => 'required|exists:forfaits',
+                'id_forfait' => 'required|exists:forfaits|numeric',
                 'debut' => 'required|date'
             ]);
 
@@ -116,13 +116,14 @@ class AbonnementController extends Controller
      *      path="/abonnement/{id_abonnement}",
      *      summary="Display a subscription",
      *      description="Use this method to return a single subscription attributes based on its id.",
-     *      operationId="showSubscription",
+     *      operationId="showAbonnement",
      *      tags={"abonnement"},
      *      @SWG\Parameter(
      *          name="id_abonnement",
      *          in="path",
      *          type="integer",
-     *          description="Id of subscription to fetch",
+     *          required=true,
+     *          description="Subscription ID",
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -143,7 +144,7 @@ class AbonnementController extends Controller
 
         if(empty($abonnement)){
             return response()->json(
-                ['error' => 'This subscription does not exist'],
+                ['error' => 'Subscription not found'],
                 404);
         }
         return $abonnement;
@@ -154,26 +155,31 @@ class AbonnementController extends Controller
      *     path="/abonnement/{id_abonnement}",
      *     summary="Update a subscription",
      *     description="Use this method to update the attributes of a subscription based on its id.",
-     *     operationId="updateSubscription",
+     *     operationId="updateAbonnement",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"abonnement"},
      *     @SWG\Parameter(
-     *         description="Name of the subscription",
-     *         in="formData",
-     *         name="id_forfait",
+     *         description="Subscription ID",
+     *         in="path",
+     *         name="id_abonnement",
      *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         description="Start date of the subscription",
+     *         description="Forfait ID",
+     *         in="formData",
+     *         name="id_forfait",
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Starting date",
      *         in="formData",
      *         name="debut",
-     *         required=true,
      *         type="string"
      *     ),
      *     @SWG\Response(
      *         response=403,
-     *         description="You don't have authorization for this content"
+     *         description="You're not allowed to access this service."
      *     ),
      *     @SWG\Response(
      *         response=200,
@@ -184,7 +190,7 @@ class AbonnementController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=422,
-     *         description="Champs manquants obligatoires ou incorrects"
+     *         description="Missing or incorrect fields"
      *     ),
      * )
      */
@@ -193,11 +199,11 @@ class AbonnementController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service.'],
                 403);
         } else {
             $validator = Validator::make($request->all(), [
-                'id_forfait' => 'unique:forfaits',
+                'id_forfait' => 'numeric',
                 'debut' => 'date'
             ]);
 
@@ -208,8 +214,8 @@ class AbonnementController extends Controller
             }
 
             $abonnement = Abonnement::find($id);
-            $abonnement->id_forfait = $request->id_forfait;
-            $abonnement->debut = $request->debut;
+            $abonnement->id_forfait = $request->id_forfait != null ? $request->id_forfait : $abonnement->id_forfait;
+            $abonnement->debut = $request->debut != null ? $request->debut : $abonnement->debut;
             $abonnement->save();
 
             return response()->json(
@@ -223,10 +229,10 @@ class AbonnementController extends Controller
      *     path="/abonnement/{id_abonnement}",
      *     summary="Delete a subscription",
      *     description="Use this method to delete a subscription based on its id.",
-     *     operationId="deleteSubscription",
+     *     operationId="destroyAbonnement",
      *     tags={"abonnement"},
      *     @SWG\Parameter(
-     *         description="Subscription id to delete",
+     *         description="Subscription ID",
      *         in="path",
      *         name="id_abonnement",
      *         required=true,
@@ -235,7 +241,7 @@ class AbonnementController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=403,
-     *         description="You don't have authorization for this content"
+     *         description="You're not allowed to access this service."
      *     ),
      *     @SWG\Response(
      *         response=200,
@@ -243,7 +249,7 @@ class AbonnementController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=404,
-     *         description="Invalid subscription value"
+     *         description="Subscription not found"
      *     )
      *
      * )
@@ -253,14 +259,14 @@ class AbonnementController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service.'],
                 403);
         } else {
             $abonnement = Abonnement::find($id);
 
             if (empty($abonnement)) {
                 return response()->json(
-                    ['error' => 'this subscription does not exist'],
+                    ['error' => 'Subscription not found'],
                     404);
             }
 
