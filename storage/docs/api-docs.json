@@ -162,6 +162,9 @@
                     },
                     "422": {
                         "description": "Missing or incorrect fields"
+                    },
+                    "404": {
+                        "description": "Subscription not found"
                     }
                 }
             },
@@ -201,9 +204,10 @@
                     "distributeur"
                 ],
                 "summary": "Display a listing of distributors.",
+                "operationId": "indexDistributeur",
                 "responses": {
                     "200": {
-                        "description": "successful operation",
+                        "description": "Successful operation",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -222,7 +226,7 @@
                 ],
                 "summary": "Create a distributor",
                 "description": "Use this method to create a distributor",
-                "operationId": "createDistributor",
+                "operationId": "storeDistributeur",
                 "consumes": [
                     "multipart/form-data",
                     "application/x-www-form-urlencoded"
@@ -231,7 +235,7 @@
                     {
                         "name": "nom",
                         "in": "formData",
-                        "description": "Nom du distributeur",
+                        "description": "Name of the distributor",
                         "required": true,
                         "type": "string",
                         "maximum": "255"
@@ -239,39 +243,35 @@
                     {
                         "name": "adresse",
                         "in": "formData",
-                        "description": "Adresse du distributeur",
-                        "required": false,
+                        "description": "Address of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "cpostal",
                         "in": "formData",
-                        "description": "Code postal du distributeur",
-                        "required": false,
+                        "description": "Zipcode of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "ville",
                         "in": "formData",
-                        "description": "Ville du distributeur",
-                        "required": false,
+                        "description": "City of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "pays",
                         "in": "formData",
-                        "description": "Pays du distributeur",
-                        "required": false,
+                        "description": "Country of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "telephone",
                         "in": "formData",
-                        "description": "T\u00e9l\u00e9phone du distributeur",
+                        "description": "Phone number of the distributor",
                         "required": true,
                         "type": "string",
                         "maximum": "255"
@@ -285,7 +285,7 @@
                         }
                     },
                     "422": {
-                        "description": "Champs manquant obligatoire ou incorrect"
+                        "description": "Missing or incorrect fields"
                     }
                 }
             }
@@ -297,12 +297,13 @@
                 ],
                 "summary": "Display a single distributor",
                 "description": "Use this method to return a single distributor attributes based on its id.",
-                "operationId": "showDistributor",
+                "operationId": "showDistributeur",
                 "parameters": [
                     {
                         "name": "id_distributeur",
                         "in": "path",
-                        "description": "id of distributeur to fetch",
+                        "description": "Distributor ID",
+                        "required": true,
                         "type": "integer"
                     }
                 ],
@@ -324,7 +325,7 @@
                 ],
                 "summary": "Update a distributor",
                 "description": "Use this method to update the attributes of a distributor based on its id.",
-                "operationId": "updateDistributor",
+                "operationId": "updateDistributeur",
                 "consumes": [
                     "multipart/form-data",
                     "application/x-www-form-urlencoded"
@@ -333,7 +334,7 @@
                     {
                         "name": "id_distributeur",
                         "in": "path",
-                        "description": "ID distributor",
+                        "description": "Distributor ID",
                         "required": true,
                         "type": "integer",
                         "maximum": "11"
@@ -341,48 +342,42 @@
                     {
                         "name": "nom",
                         "in": "formData",
-                        "description": "Nom du distributeur",
-                        "required": false,
+                        "description": "Name of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "adresse",
                         "in": "formData",
-                        "description": "Adresse du distributeur",
-                        "required": false,
+                        "description": "Address of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "cpostal",
                         "in": "formData",
-                        "description": "Code postal du distributeur",
-                        "required": false,
+                        "description": "Zipcode of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "ville",
                         "in": "formData",
-                        "description": "Ville du distributeur",
-                        "required": false,
+                        "description": "City of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "pays",
                         "in": "formData",
-                        "description": "Pays du distributeur",
-                        "required": false,
+                        "description": "Country of the distributor",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "telephone",
                         "in": "formData",
-                        "description": "T\u00e9l\u00e9phone du distributeur",
-                        "required": false,
+                        "description": "Phone number of the distributor",
                         "type": "string",
                         "maximum": "255"
                     }
@@ -395,7 +390,10 @@
                         }
                     },
                     "422": {
-                        "description": "Champs manquants obligatoires ou incorrects"
+                        "description": "Missing or incorrect fields"
+                    },
+                    "404": {
+                        "description": "Distributor not found"
                     }
                 }
             },
@@ -405,12 +403,12 @@
                 ],
                 "summary": "Delete a distributor",
                 "description": "Use this method to delete a distributor based on its id.",
-                "operationId": "deleteDistributor",
+                "operationId": "destroyDistributeur",
                 "parameters": [
                     {
                         "name": "id_distributeur",
                         "in": "path",
-                        "description": "Distributor ID to delete",
+                        "description": "Distributor ID",
                         "required": true,
                         "type": "integer",
                         "format": "int64"
@@ -421,7 +419,7 @@
                         "description": "Distributor deleted"
                     },
                     "404": {
-                        "description": "Invalid distributor value"
+                        "description": "Distributor not found"
                     }
                 }
             }
@@ -809,7 +807,7 @@
                     {
                         "name": "cadre",
                         "in": "formData",
-                        "description": "Salary of the function",
+                        "description": "Senior status of the function",
                         "required": true,
                         "type": "integer"
                     }
@@ -822,7 +820,7 @@
                         }
                     },
                     "403": {
-                        "description": "You don't have authorization for this content"
+                        "description": "You're not allowed to access this service."
                     },
                     "422": {
                         "description": "Missing or incorrect fields"
@@ -872,8 +870,8 @@
                 "parameters": [
                     {
                         "name": "id_fonction",
-                        "in": "formData",
-                        "description": "Name of the function",
+                        "in": "path",
+                        "description": "Id of the function",
                         "required": true,
                         "type": "integer"
                     },
@@ -904,7 +902,7 @@
                         }
                     },
                     "403": {
-                        "description": "You don't have authorization for this content"
+                        "description": "You're not allowed to access this service."
                     },
                     "422": {
                         "description": "Missing or incorrect fields"
@@ -930,7 +928,7 @@
                 ],
                 "responses": {
                     "403": {
-                        "description": "You don't have authorization for this content"
+                        "description": "You're not allowed to access this service."
                     },
                     "200": {
                         "description": "Function deleted"
@@ -1957,6 +1955,7 @@
                     "salle"
                 ],
                 "summary": "Display a listing of rooms.",
+                "operationId": "indexSalle",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1966,6 +1965,9 @@
                                 "$ref": "#/definitions/Salle"
                             }
                         }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
                     }
                 }
             },
@@ -1975,16 +1977,23 @@
                 ],
                 "summary": "Create a room",
                 "description": "Use this method to create a room",
-                "operationId": "createRoom",
+                "operationId": "storeSalle",
                 "consumes": [
                     "multipart/form-data",
                     "application/x-www-form-urlencoded"
                 ],
                 "parameters": [
                     {
+                        "name": "numero_salle",
+                        "in": "formData",
+                        "description": "Room number",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
                         "name": "nom_salle",
                         "in": "formData",
-                        "description": "Nom de la salle",
+                        "description": "Name of the room",
                         "required": true,
                         "type": "string",
                         "maximum": "255"
@@ -1992,14 +2001,14 @@
                     {
                         "name": "etage_salle",
                         "in": "formData",
-                        "description": "Nombre d'\u00e9tages de la salle",
+                        "description": "Floor number",
                         "required": true,
                         "type": "integer"
                     },
                     {
                         "name": "places",
                         "in": "formData",
-                        "description": "Nombre de places",
+                        "description": "Seats number",
                         "required": true,
                         "type": "integer"
                     }
@@ -2008,11 +2017,11 @@
                     "201": {
                         "description": "Room created",
                         "schema": {
-                            "$ref": "#/definitions/Genre"
+                            "$ref": "#/definitions/Salle"
                         }
                     },
                     "422": {
-                        "description": "Champ manquant obligatoire ou incorrect"
+                        "description": "Missing or incorrect fields"
                     }
                 }
             }
@@ -2024,12 +2033,13 @@
                 ],
                 "summary": "Display a single room",
                 "description": "Use this method to return a single room attributes based on its id.",
-                "operationId": "showRoom",
+                "operationId": "showSalle",
                 "parameters": [
                     {
                         "name": "id_salle",
                         "in": "path",
-                        "description": "id of room to fetch",
+                        "description": "Room ID",
+                        "required": true,
                         "type": "integer"
                     }
                 ],
@@ -2051,38 +2061,43 @@
                 ],
                 "summary": "Update a room",
                 "description": "Use this method to update the attributes of a room",
-                "operationId": "updateRoom",
+                "operationId": "updateSalle",
                 "consumes": [
                     "multipart/form-data",
                     "application/x-www-form-urlencoded"
                 ],
                 "parameters": [
                     {
-                        "name": "nom_salle",
+                        "name": "id_salle",
                         "in": "path",
                         "description": "Room ID",
+                        "required": true,
                         "type": "string"
+                    },
+                    {
+                        "name": "numero_salle",
+                        "in": "formData",
+                        "description": "Room number",
+                        "required": true,
+                        "type": "integer"
                     },
                     {
                         "name": "nom_salle",
                         "in": "formData",
-                        "description": "Room's name",
-                        "required": true,
+                        "description": "Name of the room",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "etage_salle",
                         "in": "formData",
-                        "description": "Rooms' floor number",
-                        "required": true,
+                        "description": "Floor number",
                         "type": "integer"
                     },
                     {
                         "name": "places",
                         "in": "formData",
-                        "description": "Rooms' seats number",
-                        "required": true,
+                        "description": "Seats number",
                         "type": "integer"
                     }
                 ],
@@ -2094,7 +2109,10 @@
                         }
                     },
                     "422": {
-                        "description": "Champ manquant obligatoire ou incorrect"
+                        "description": "Missing or incorrect fields"
+                    },
+                    "404": {
+                        "description": "Room not found"
                     }
                 }
             },
@@ -2104,12 +2122,12 @@
                 ],
                 "summary": "Delete a room",
                 "description": "Use this method to delete a room based on its id.",
-                "operationId": "deleteRoom",
+                "operationId": "destroySalle",
                 "parameters": [
                     {
                         "name": "id_salle",
                         "in": "path",
-                        "description": "Room ID to delete",
+                        "description": "Room ID",
                         "required": true,
                         "type": "integer",
                         "format": "int64"
@@ -2120,7 +2138,7 @@
                         "description": "Room deleted"
                     },
                     "404": {
-                        "description": "Invalid room ID"
+                        "description": "Room not found"
                     }
                 }
             }
@@ -2174,18 +2192,21 @@
                         "name": "id_personne_ouvreur",
                         "in": "formData",
                         "description": "Room ID",
+                        "required": true,
                         "type": "integer"
                     },
                     {
                         "name": "id_personne_technicien",
                         "in": "formData",
                         "description": "Technician guy ID",
+                        "required": true,
                         "type": "integer"
                     },
                     {
                         "name": "id_personne_menage",
                         "in": "formData",
                         "description": "Cleaning guy ID",
+                        "required": true,
                         "type": "integer"
                     },
                     {
@@ -2200,6 +2221,7 @@
                         "name": "fin_seance",
                         "in": "formData",
                         "description": "Ending time",
+                        "required": true,
                         "type": "string",
                         "maximum": "255"
                     }
