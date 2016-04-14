@@ -15,12 +15,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesResources;
  *     basePath="/",
  *     @SWG\Info(
  *          version="1.0.0",
- *          title="Ma première API",
+ *          title="API UGC Nation",
  *          description="Une API permettant l'accès aux données de la base via une approche RESTful",
  *          termsOfService="",
  *          @SWG\Contact(
- *              name="Guiks",
- *              email="guillaume.delapre@gmail.com"
+ *              name="Tribush.com",
+ *              email="contact@tribush.com"
  *          ),
  *     ),
  *     consumes={"application/json"},
