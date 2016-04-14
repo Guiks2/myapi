@@ -128,6 +128,14 @@ class GenreController extends Controller
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"genre"},
      *     @SWG\Parameter(
+     *         description="ID genre",
+     *         in="path",
+     *         name="id_genre",
+     *         required=true,
+     *         type="integer",
+     *         maximum="11"
+     *     ),
+     *     @SWG\Parameter(
      *         description="Nom du genre",
      *         in="formData",
      *         name="nom",
@@ -161,6 +169,11 @@ class GenreController extends Controller
         }
 
         $genre = Genre::find($id);
+        if(empty($genre)){
+            return response()->json(
+                ['error' => 'Genre not found'],
+                404);
+        }
         $genre->nom = $request->nom;
         $genre->save();
         
@@ -206,5 +219,8 @@ class GenreController extends Controller
         }
 
         $genre->delete();
+        return response()->json(
+            'Successfully deleted',
+            200);
     }
 }
