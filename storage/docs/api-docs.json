@@ -939,6 +939,198 @@
                 }
             }
         },
+        "/forfait": {
+            "get": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Display a listing of forfaits.",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Forfait"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No forfaits"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Create a forfait",
+                "description": "Use this method to create a forfait",
+                "operationId": "createForfait",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the forfait",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "resum",
+                        "in": "formData",
+                        "description": "Description of the forfait",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "prix",
+                        "in": "formData",
+                        "description": "Price of the forfait",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "duree_jours",
+                        "in": "formData",
+                        "description": "Day duration of the forfait",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Forfait created"
+                    },
+                    "422": {
+                        "description": "Champs manquant obligatoire ou incorrect"
+                    }
+                }
+            }
+        },
+        "/forfait/{id_forfait}": {
+            "get": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Find forfait by ID",
+                "description": "Returns a single forfait",
+                "operationId": "getForfaitById",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_forfait",
+                        "in": "path",
+                        "description": "ID of film to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Forfait not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Update a forfait",
+                "description": "Use this method to update a forfait",
+                "operationId": "updateForfait",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_forfait",
+                        "in": "path",
+                        "description": "ID of forfait to update",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the forfait",
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "resum",
+                        "in": "formData",
+                        "description": "Description of the forfait",
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "prix",
+                        "in": "formData",
+                        "description": "Price of the forfait",
+                        "required": false,
+                        "type": "integer",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "duree_jours",
+                        "in": "formData",
+                        "description": "Day duration of the forfait",
+                        "type": "integer",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Forfait updated"
+                    },
+                    "422": {
+                        "description": "Champs manquant obligatoire ou incorrect"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Delete a forfait",
+                "description": "Delete a forfait through an ID",
+                "operationId": "deleteForfait",
+                "parameters": [
+                    {
+                        "name": "id_forfait",
+                        "in": "path",
+                        "description": "Forfait ID to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Forfait deleted"
+                    },
+                    "404": {
+                        "description": "Invalid forfait value"
+                    }
+                }
+            }
+        },
         "/genre": {
             "get": {
                 "tags": [
