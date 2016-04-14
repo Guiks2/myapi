@@ -6,8 +6,8 @@ use App\Abonnement;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AbonnementController extends Controller
 {
@@ -192,6 +192,10 @@ class AbonnementController extends Controller
      *         response=422,
      *         description="Missing or incorrect fields"
      *     ),
+     *     @SWG\Response(
+     *         response=404,
+     *         description="Subscription not found"
+     *     ),
      * )
      */
     public function update(Request $request, $id)
@@ -214,6 +218,13 @@ class AbonnementController extends Controller
             }
 
             $abonnement = Abonnement::find($id);
+
+            if (empty($abonnement)) {
+                return response()->json(
+                    ['error' => 'Subscription not found'],
+                    404);
+            }
+
             $abonnement->id_forfait = $request->id_forfait != null ? $request->id_forfait : $abonnement->id_forfait;
             $abonnement->debut = $request->debut != null ? $request->debut : $abonnement->debut;
             $abonnement->save();
