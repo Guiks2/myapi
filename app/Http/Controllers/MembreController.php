@@ -281,5 +281,8 @@ class MembreController extends Controller
         }
 
         $membre->delete();
+        return response()->json(
+            'Successfully deleted',
+            200);
     }
 }
