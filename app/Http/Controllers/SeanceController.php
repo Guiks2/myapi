@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Seance;
+use App\Film;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -112,9 +113,9 @@ class SeanceController extends Controller
         $validator = Validator::make($request->all(), [
             'id_film' => 'required|numeric|exists:films',
             'id_salle' => 'required|numeric|exists:salles',
-            'id_personne_ouvreur' => 'required|numeric|exists:personnes',
-            'id_personne_technicien' => 'required|numeric|exists:personnes',
-            'id_personne_menage' => 'required|numeric|exists:personnes',
+            'id_personne_ouvreur' => 'required|numeric|exists:personnes,id_personne',
+            'id_personne_technicien' => 'required|numeric|exists:personnes,id_personne',
+            'id_personne_menage' => 'required|numeric|exists:personnes,id_personne',
             'debut_seance' => 'required|max:255',
             'fin_seance' => 'required|max:255'
         ]);
@@ -328,5 +329,88 @@ class SeanceController extends Controller
             $seance->delete();
         }
     }
+
+    /**
+     * @SWG\Get(
+     *     path="/seance/film/{id_film}",
+     *     summary="Display next seances by id Film",
+     *     description="Use this method to return a listing of next seances based on film id and dates.",
+     *     operationId="getSeancesByIdFilm",
+     *     tags={"seance"},
+     *     @SWG\Parameter(
+     *         description="ID of film to get seances",
+     *         in="path",
+     *         name="id_film",
+     *         required=true,
+     *         type="integer",
+     *         format="int64"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Beginning date to get seances",
+     *         in="query",
+     *         name="date_debut",
+     *         type="string",
+     *         format="date"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Ending date to get seances",
+     *         in="query",
+     *         name="date_fin",
+     *         type="string",
+     *         format="date"
+     *     ),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref="#/definitions/Seance")
+     *          ),
+     *     ),
+     *     @SWG\Response(
+     *          response=204,
+     *          description="Successful operation but there isn't seance with this film or dates",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref="#/definitions/Seance")
+     *          ),
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Film not found"
+     *     )
+     *  )
+     */
+    public function getSeancesByIdFilm(Request $request, $id)
+    {
+        $film = Film::find($id);
+
+        if (empty($film)) {
+            return response()->json(
+                ['error' => 'this film does not exist'],
+                404);
+        }
+
+        if(empty($request->date_debut)){
+            $date_debut = date('Y-m-d').' 00:00:00';
+        } else {
+            $date_debut = $request->date_debut;
+        }
+
+        $seances = Seance::where('id_film', $id)
+            ->where('debut_seance', '>=', $date_debut)
+            ->orderBy('id_film')
+            ->get();
+
+        if ($seances->isEmpty()) {
+            return response()->json("No content", 204);
+        }
+
+        foreach($seances as $key => $seance){
+            $seance->film;
+            $seance->salle;
+        }
+
+        return $seances;
     }
 }

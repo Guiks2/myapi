@@ -9,5 +9,5 @@ Homestead.json
 .idea/workspace.xml
 .idea/vcs.xml
 .idea/encodings.xml
-storage/docs/api-docs.json
-storage/docs/api-docs.json
+.idea/dataSources.ids
+.idea/dataSources.xml
