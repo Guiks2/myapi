@@ -13,15 +13,15 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+    
 class FilmController extends Controller
 {
     /**
      * @SWG\Get(
      *     path="/film",
-     *     summary="Get a film list",
-     *     description="Use this method to return a listing of films.",
-     *     operationId="listFilm",
+     *     summary="Get a movie list",
+     *     description="Use this method to return a listing of all movies.",
+     *     operationId="indexFilm",
      *     tags={"film"},
      *     @SWG\Response(
      *          response=200,
@@ -42,7 +42,7 @@ class FilmController extends Controller
         $films = Film::all();
 
         if ($films->isEmpty()) {
-            return response()->json("No content", 204);
+            return response()->json("The request didn't return any content.", 204);
         }
 
         return $films;
@@ -52,12 +52,26 @@ class FilmController extends Controller
      * @SWG\Post(
      *     path="/film",
      *     summary="Create a film",
-     *     description="Use this method to create a new film.",
-     *     operationId="createFilm",
+     *     description="Use this method to create a new movie.",
+     *     operationId="storeFilm",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"film"},
      *     @SWG\Parameter(
-     *         description="Name of the film",
+     *         description="Genre ID",
+     *         in="formData",
+     *         name="id_genre",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Distributor ID",
+     *         in="formData",
+     *         name="id_distributeur",
+     *         required=true,
+     *         type="integer"
+     *     ),    
+     *     @SWG\Parameter(
+     *         description="Name of the movie",
      *         in="formData",
      *         name="titre",
      *         required=true,
@@ -65,7 +79,7 @@ class FilmController extends Controller
      *         maximum="255"
      *     ),
      *     @SWG\Parameter(
-     *         description="Resume of the film",
+     *         description="Resume of the movie",
      *         in="formData",
      *         name="resum",
      *         required=true,
@@ -73,28 +87,28 @@ class FilmController extends Controller
      *         maximum="255"
      *     ),
      *     @SWG\Parameter(
-     *         description="Date début affiche",
+     *         description="Starting date",
      *         in="formData",
      *         name="date_debut_affiche",
      *         required=true,
      *         type="string"
      *     ),
      *     @SWG\Parameter(
-     *         description="Date fin affiche",
+     *         description="Ending date",
      *         in="formData",
      *         name="date_fin_affiche",
      *         required=true,
      *         type="string"
      *     ),
      *     @SWG\Parameter(
-     *         description="Durée en minutes",
+     *         description="Duration",
      *         in="formData",
      *         name="duree_minutes",
      *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         description="Année de production",
+     *         description="Production year",
      *         in="formData",
      *         name="annee_production",
      *         required=true,
@@ -109,20 +123,27 @@ class FilmController extends Controller
      *          ),
      *     ),
      *     @SWG\Response(
+     *          response=403,
+     *          description="Permission required"
+     *     ),
+     *     @SWG\Response(
      *         response=422,
-     *         description="Champs manquant obligatoire ou incorrect"
+     *         description="Missing or incorrect field"
      *     )
      * )
      */
     public function store(Request $request)
     {
         $user = JWTAuth::parseToken()->authenticate();
+
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service.'],
                 403);
         } else {
             $validator = Validator::make($request->all(), [
+                'id_genre' => 'required|exists:genres|numeric',
+                'id_distributeur' => 'required|exists:distributeurs|numeric',
                 'titre' => 'required|unique:films|max:255',
                 'resum' => 'required|max:255',
                 'date_debut_affiche' => 'required|date|before:'.$request->date_fin_affiche,
@@ -138,6 +159,8 @@ class FilmController extends Controller
             }
 
             $film = new Film;
+            $film->id_genre = $request->id_genre;
+            $film->id_distributeur = $request->id_distributeur;
             $film->titre = $request->titre;
             $film->resum = $request->resum;
             $film->date_debut_affiche = $request->date_debut_affiche;
@@ -155,15 +178,17 @@ class FilmController extends Controller
     /**
      * @SWG\Get(
      *      path="/film/{id_film}",
-     *      summary="Display a single film",
-     *      description="Use this method to return a single film attributes based on its id.",
+     *      summary="Display a single movie",
+     *      description="Use this method to return a single movie attributes based on its id.",
      *      operationId="showFilm",
      *      tags={"film"},
      *      @SWG\Parameter(
      *          name="id_film",
      *          in="path", 
      *          type="integer",
-     *          description="id of film to fetch",
+     *          required=true,
+     *          description="Movie ID",
+     *          format="int64"
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -174,8 +199,8 @@ class FilmController extends Controller
      *      ),
      *      @SWG\Response(
      *           response=404, 
-     *           description="Film not found"
-     *       ),
+     *           description="Movie not found"
+     *      ),
      * )
      */
     public function show($id)
@@ -184,63 +209,76 @@ class FilmController extends Controller
 
         if(empty($film)){
             return response()->json(
-                ['error' => 'This film does not exist'],
+                ['error' => 'Movie not found'],
                 404);
         }
         return $film;
     }
 
-
     /**
      * @SWG\Put(
      *     path="/film/{id_film}",
-     *     summary="Update a film",
-     *     description="Use this method to update the attributes of a film based on its id.",
+     *     summary="Update a movie",
+     *     description="Use this method to update the attributes of a movie based on its id.",
      *     operationId="updateFilm",
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"film"},
      *     @SWG\Parameter(
-     *         description="Name of the film",
-     *         in="formData",
-     *         name="titre",
+     *         name="id_film",
+     *         in="path", 
+     *         type="integer",
      *         required=true,
-     *         type="string",
-     *         maximum="255"
+     *         description="Movie ID",
+     *         format="int64"
      *     ),
      *     @SWG\Parameter(
-     *         description="Resume of the film",
+     *         description="Genre ID",
      *         in="formData",
-     *         name="resum",
-     *         required=true,
-     *         type="string",
-     *         maximum="255"
-     *     ),
-     *     @SWG\Parameter(
-     *         description="Date début affiche",
-     *         in="formData",
-     *         name="date_debut_affiche",
-     *         required=true,
-     *         type="string"
-     *     ),
-     *     @SWG\Parameter(
-     *         description="Date fin affiche",
-     *         in="formData",
-     *         name="date_fin_affiche",
-     *         required=true,
-     *         type="string"
-     *     ),
-     *     @SWG\Parameter(
-     *         description="Durée en minutes",
-     *         in="formData",
-     *         name="duree_minutes",
-     *         required=true,
+     *         name="id_genre",
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         description="Année de production",
+     *         description="Distributor ID",
+     *         in="formData",
+     *         name="id_distributeur",
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Name of the movie",
+     *         in="formData",
+     *         name="titre",
+     *         type="string",
+     *         maximum="255"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Resume of the movie",
+     *         in="formData",
+     *         name="resum",
+     *         type="string",
+     *         maximum="255"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Starting date",
+     *         in="formData",
+     *         name="date_debut_affiche",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Ending date",
+     *         in="formData",
+     *         name="date_fin_affiche",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Duration",
+     *         in="formData",
+     *         name="duree_minutes",
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         description="Production year",
      *         in="formData",
      *         name="annee_production",
-     *         required=true,
      *         type="integer",
      *         maximum="4"
      *     ),
@@ -252,8 +290,12 @@ class FilmController extends Controller
      *         ),
      *     ),
      *     @SWG\Response(
+     *           response=404, 
+     *           description="Movie not found"
+     *     ),
+     *     @SWG\Response(
      *         response=422,
-     *         description="Champs manquants obligatoires ou incorrects"
+     *         description="Missing or incorrect fields"
      *     ),
      * )
      */
@@ -262,16 +304,18 @@ class FilmController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service.'],
                 403);
         } else {
             $validator = Validator::make($request->all(), [
-                'titre' => 'required|unique:films|max:255',
-                'resum' => 'required|max:255',
-                'date_debut_affiche' => 'required|date|before:' . $request->date_fin_affiche,
-                'date_fin_affiche' => 'required|date|after:' . $request->date_debut_affiche,
-                'duree_minutes' => 'required|numeric',
-                'annee_production' => 'required|digits:4'
+                'id_genre' => 'exists:genres|numeric',
+                'id_distributeur' => 'exists:distributeurs|numeric',
+                'titre' => 'unique:films|max:255',
+                'resum' => 'max:255',
+                'date_debut_affiche' => 'date|before:' . $request->date_fin_affiche,
+                'date_fin_affiche' => 'date|after:' . $request->date_debut_affiche,
+                'duree_minutes' => 'numeric',
+                'annee_production' => 'digits:4'
             ]);
 
             if ($validator->fails()) {
@@ -281,12 +325,21 @@ class FilmController extends Controller
             }
 
             $film = Film::find($id);
-            $film->titre = $request->titre;
-            $film->resum = $request->resum;
-            $film->date_debut_affiche = $request->date_debut_affiche;
-            $film->date_fin_affiche = $request->date_fin_affiche;
-            $film->duree_minutes = $request->duree_minutes;
-            $film->annee_production = $request->annee_production;
+
+            if(empty($film)){
+                return response()->json(
+                    ['error' => 'Movie not found'],
+                    404);
+            }
+
+            $film->id_genre = $request->id_genre != null ? $request->id_genre : $film->id_genre;
+            $film->id_distributeur = $request->id_distributeur != null ? $request->id_distributeur : $film->id_distributeur;
+            $film->titre = $request->titre != null ? $request->titre : $film->titre;
+            $film->resum = $request->resum != null ? $request->resum : $film->resum;
+            $film->date_debut_affiche = $request->date_debut_affiche != null ? $request->date_debut_affiche : $film->date_debut_affiche;
+            $film->date_fin_affiche = $request->date_fin_affiche != null ? $request->date_fin_affiche : $film->date_fin_affiche;
+            $film->duree_minutes = $request->duree_minutes != null ? $request->duree_minutes : $film->duree_minutes;
+            $film->annee_production = $request->annee_production != null ? $request->annee_production : $film->annee_production;
             $film->save();
 
             return response()->json(
@@ -295,17 +348,15 @@ class FilmController extends Controller
         }    
     }
 
-
-
     /**
      * @SWG\Delete(
      *     path="/film/{id_film}",
      *     summary="Delete a film",
-     *     description="Use this method to delete a film based on its id.",
-     *     operationId="deleteFilm",
+     *     description="Use this method to delete a movie based on its id.",
+     *     operationId="destroyFilm",
      *     tags={"film"},
      *     @SWG\Parameter(
-     *         description="Film ID to delete",
+     *         description="Movie ID",
      *         in="path",
      *         name="id_film",
      *         required=true,
@@ -314,11 +365,11 @@ class FilmController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=200,
-     *         description="FIlm deleted"
+     *         description="Movie deleted"
      *     ),
      *     @SWG\Response(
      *         response=404,
-     *         description="Invalid film value"
+     *         description="Movie not found"
      *     )
      *
      * )
@@ -326,16 +377,17 @@ class FilmController extends Controller
     public function destroy($id)
     {
         $user = JWTAuth::parseToken()->authenticate();
-        if ($user->type != 1){
+        if ($user->type != 1) {
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service.'],
                 403);
         } else {
+            
             $film = Film::find($id);
 
             if (empty($film)) {
                 return response()->json(
-                    ['error' => 'this film does not exist'],
+                    ['error' => 'Movie not found'],
                     404);
             }
 
@@ -346,15 +398,16 @@ class FilmController extends Controller
     /**
      * @SWG\Get(
      *      path="/film/distributeur/{id_distributeur}",
-     *      summary="Display films by ditributor",
-     *      description="Use this method to return a listing of films based on distributors id.",
+     *      summary="Display movies by ditributor",
+     *      description="Use this method to return a listing of movies based on distributors id.",
      *      operationId="listFilmsByDistributor",
      *      tags={"film"},
      *      @SWG\Parameter(
      *          name="id_distributeur",
      *          in="path",
      *          type="integer",
-     *          description="id of distributor to fetch",
+     *          required=true,
+     *          description="Distributor ID",
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -365,9 +418,13 @@ class FilmController extends Controller
      *          ),
      *      ),
      *      @SWG\Response(
+     *         response=204,
+     *         description="The request didn't return any content.",
+     *      ),
+     *      @SWG\Response(
      *           response=404,
      *           description="Distributor not found"
-     *       ),
+     *      ),
      * )
      */
     public function listFilmsByDistributor($id)
@@ -375,13 +432,13 @@ class FilmController extends Controller
         $distributeur = Distributeur::find($id);
         if(empty($distributeur)){
             return response()->json(
-                ['error' => 'This distributor does not exist'],
+                ['error' => 'Distributor not found'],
                 404);
         }
 
         $films = Film::where('id_distributeur', $id)->get();
         if ($films->isEmpty()) {
-            return response()->json("No content", 204);
+            return response()->json("The request didn't return any content.", 204);
         }
 
         return $films;
@@ -390,15 +447,16 @@ class FilmController extends Controller
     /**
      * @SWG\Get(
      *      path="/film/genre/{id_genre}",
-     *      summary="Display films by genre",
-     *      description="Use this method to return a listing of films based on genre id.",
+     *      summary="Display movies by genre",
+     *      description="Use this method to return a listing of movies based on genre id.",
      *      operationId="listFilmsByGenre",
      *      tags={"film"},
      *      @SWG\Parameter(
      *          name="id_genre",
      *          in="path",
      *          type="integer",
-     *          description="id of genre to fetch",
+     *          required=true,
+     *          description="Genre ID",
      *      ),
      *      @SWG\Response(
      *          response=200,
@@ -409,9 +467,13 @@ class FilmController extends Controller
      *          ),
      *      ),
      *      @SWG\Response(
+     *          response=204,
+     *          description="The request didn't return any content.",
+     *      ),
+     *      @SWG\Response(
      *           response=404,
      *           description="Genre not found"
-     *       ),
+     *      ),
      * )
      */
     public function listFilmsByGenre($id)
@@ -419,13 +481,13 @@ class FilmController extends Controller
         $genre = Genre::find($id);
         if(empty($genre)){
             return response()->json(
-                ['error' => 'This genre does not exist'],
+                ['error' => 'Genre not found'],
                 404);
         }
 
         $films = Film::where('id_genre', $id)->get();
         if ($films->isEmpty()) {
-            return response()->json("No content", 204);
+            return response()->json("The request didn't return any content.", 204);
         }
 
         return $films;
