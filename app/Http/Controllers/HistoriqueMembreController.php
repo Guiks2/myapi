@@ -138,7 +138,7 @@ class HistoriqueMembreController extends Controller
 
         if(empty($historiques)){
             return response()->json(
-                ['error' => 'this historique does not exist'],
+                ['error' => 'this historic does not exist'],
                 404);
         }
         return $historiques;

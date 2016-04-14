@@ -273,6 +273,11 @@ class SeanceController extends Controller
         }
 
         $seance = Seance::find($id);
+        if(empty($seance)){
+            return response()->json(
+                ['error' => 'Seance not found'],
+                404);
+        }
         $seance->id_film = $request->id_film != null ? $request->id_film : $seance->id_film;
         $seance->id_salle = $request->id_salle != null ? $request->id_salle : $seance->id_salle;
         $seance->id_personne_ouvreur = $request->id_personne_ouvreur != null ? $request->id_personne_ouvreur : $seance->id_personne_ouvreur;
@@ -331,6 +336,9 @@ class SeanceController extends Controller
             }
 
             $seance->delete();
+            return response()->json(
+                'Successfully deleted',
+                200);
         }
     }
 

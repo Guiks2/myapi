@@ -379,7 +379,7 @@
                         "in": "formData",
                         "description": "Phone number of the distributor",
                         "type": "string",
-                        "maximum": "255"
+                        "maximum": "15"
                     }
                 ],
                 "responses": {
@@ -420,6 +420,180 @@
                     },
                     "404": {
                         "description": "Distributor not found"
+                    }
+                }
+            }
+        },
+        "/employe": {
+            "get": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Get employee list",
+                "description": "Use this method to return a listing of employees.",
+                "operationId": "listEmployee",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Employe"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Create an employee",
+                "description": "Use this method to create a new employee.",
+                "operationId": "createEmployee",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_personne",
+                        "in": "formData",
+                        "description": "Id of the person",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_fonction",
+                        "in": "formData",
+                        "description": "Id of the function",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Employee created",
+                        "schema": {
+                            "$ref": "#/definitions/Employe"
+                        }
+                    },
+                    "403": {
+                        "description": "You're not allowed to access this service."
+                    },
+                    "422": {
+                        "description": "Missing or incorrect fields"
+                    }
+                }
+            }
+        },
+        "/employe/{id_employe}": {
+            "get": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Display an employee",
+                "description": "Use this method to return a single employee attributes based on its id.",
+                "operationId": "showEmployee",
+                "parameters": [
+                    {
+                        "name": "id_employe",
+                        "in": "path",
+                        "description": "Id of employee to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Employe"
+                        }
+                    },
+                    "404": {
+                        "description": "Employee not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Update an employee",
+                "description": "Use this method to update the attributes of an employee based on its id.",
+                "operationId": "updateEmployee",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_employe",
+                        "in": "path",
+                        "description": "Id of the employee",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_personne",
+                        "in": "formData",
+                        "description": "Id of the person",
+                        "type": "string"
+                    },
+                    {
+                        "name": "id_fonction",
+                        "in": "formData",
+                        "description": "Id of the function",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Employee updated",
+                        "schema": {
+                            "$ref": "#/definitions/Employe"
+                        }
+                    },
+                    "403": {
+                        "description": "You're not allowed to access this service."
+                    },
+                    "404": {
+                        "description": "This employee can not be found."
+                    },
+                    "422": {
+                        "description": "Missing or incorrect fields"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Delete an employee",
+                "description": "Use this method to delete an employee based on its id.",
+                "operationId": "deleteEmployee",
+                "parameters": [
+                    {
+                        "name": "id_employe",
+                        "in": "path",
+                        "description": "Employee id to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "You're not allowed to access this service."
+                    },
+                    "200": {
+                        "description": "Employee deleted"
+                    },
+                    "404": {
+                        "description": "Invalid employee value"
                     }
                 }
             }
@@ -935,6 +1109,198 @@
                     },
                     "404": {
                         "description": "Invalid function value"
+                    }
+                }
+            }
+        },
+        "/forfait": {
+            "get": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Display a listing of forfaits.",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Forfait"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No forfaits"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Create a forfait",
+                "description": "Use this method to create a forfait",
+                "operationId": "createForfait",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the forfait",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "resum",
+                        "in": "formData",
+                        "description": "Description of the forfait",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "prix",
+                        "in": "formData",
+                        "description": "Price of the forfait",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "duree_jours",
+                        "in": "formData",
+                        "description": "Day duration of the forfait",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Forfait created"
+                    },
+                    "422": {
+                        "description": "Fields missing or incorrect"
+                    }
+                }
+            }
+        },
+        "/forfait/{id_forfait}": {
+            "get": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Find forfait by ID",
+                "description": "Returns a single forfait",
+                "operationId": "getForfaitById",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_forfait",
+                        "in": "path",
+                        "description": "ID of film to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Forfait not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Update a forfait",
+                "description": "Use this method to update a forfait",
+                "operationId": "updateForfait",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_forfait",
+                        "in": "path",
+                        "description": "ID of forfait to update",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the forfait",
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "resum",
+                        "in": "formData",
+                        "description": "Description of the forfait",
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "prix",
+                        "in": "formData",
+                        "description": "Price of the forfait",
+                        "required": false,
+                        "type": "integer",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "duree_jours",
+                        "in": "formData",
+                        "description": "Day duration of the forfait",
+                        "type": "integer",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Forfait updated"
+                    },
+                    "422": {
+                        "description": "Fields missong or incorrect"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "forfait"
+                ],
+                "summary": "Delete a forfait",
+                "description": "Delete a forfait through an ID",
+                "operationId": "deleteForfait",
+                "parameters": [
+                    {
+                        "name": "id_forfait",
+                        "in": "path",
+                        "description": "Forfait ID to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Forfait deleted"
+                    },
+                    "404": {
+                        "description": "Invalid forfait value"
                     }
                 }
             }

@@ -306,14 +306,19 @@ class PersonneController extends Controller
         }
 
         $personne = Personne::find($id);
-        $personne->nom = $request->nom;
-        $personne->prenom = $request->prenom;
-        $personne->date_naissance = $request->date_naissance;
-        $personne->email = $request->email;
-        $personne->adresse = $request->adresse;
-        $personne->cpostal = $request->cpostal;
-        $personne->ville = $request->ville;
-        $personne->pays = $request->pays;
+        if(empty($personne)){
+            return response()->json(
+                ['error' => 'Person not found'],
+                404);
+        }
+        $personne->nom = $request->nom != null ? $request->nom : $personne->nom;
+        $personne->prenom = $request->prenom != null ? $request->prenom : $personne->prenom;
+        $personne->date_naissance = $request->date_naissance != null ? $request->date_naissance : $personne->date_naissance;
+        $personne->email = $request->email != null ? $request->email : $personne->email;
+        $personne->adresse = $request->adresse != null ? $request->adresse : $personne->adresse;
+        $personne->cpostal = $request->cpostal != null ? $request->cpostal : $personne->cpostal;
+        $personne->ville = $request->ville != null ? $request->ville : $personne->ville;
+        $personne->pays = $request->pays != null ? $request->pays : $personne->pays;
         $personne->save();
 
         return response()->json(
@@ -358,5 +363,10 @@ class PersonneController extends Controller
         }
 
         $person->delete();
+        if(empty($person)){
+            return response()->json(
+                ['error' => 'Person not found'],
+                404);
+        }
     }
 }

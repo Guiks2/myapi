@@ -233,10 +233,15 @@ class MembreController extends Controller
         }
 
         $membre = Membre::find($id);
-        $membre->id_personne = $request->id_personne;
-        $membre->id_abonnement = $request->id_abonnement;
-        $membre->date_inscription = $request->date_inscription;
-        $membre->debut_abonnement = $request->debut_abonnement;
+        if(empty($membre)){
+            return response()->json(
+                ['error' => 'Member not found'],
+                404);
+        }
+        $membre->id_personne = $request->id_personne != null ? $request->id_personne : $membre->id_personne;
+        $membre->id_abonnement = $request->id_abonnement != null ? $request->id_abonnement : $membre->id_abonnement;
+        $membre->date_inscription = $request->date_inscription != null ? $request->date_inscription : $membre->date_inscription;
+        $membre->debut_abonnement = $request->debut_abonnement != null ? $request->debut_abonnement : $membre->debut_abonnement;
         $membre->save();
 
         return response()->json(
@@ -281,5 +286,8 @@ class MembreController extends Controller
         }
 
         $membre->delete();
+        return response()->json(
+            'Successfully deleted',
+            200);
     }
 }
