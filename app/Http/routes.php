@@ -43,6 +43,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::resource('salle', 'SalleController');
 
     Route::resource('seance', 'SeanceController');
+    Route::get('seance/film/{id_film}', 'SeanceController@getSeancesByIdFilm');
 });
 
 Route::resource('distributeur', 'DistributeurController');
