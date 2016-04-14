@@ -21,6 +21,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::resource('distributeur', 'DistributeurController');
     
     Route::resource('employe', 'EmployeController');
+    Route::get('planningEmploye/{id_employe}', 'EmployeController@getPlanningByIdPersonne');
     
     Route::resource('film', 'FilmController');
     Route::get('film/distributeur/{id_distributeur}', 'FilmController@listFilmsByDistributor');

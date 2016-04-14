@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Employe;
+use App\Seance;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Validator;
@@ -278,5 +279,50 @@ class EmployeController extends Controller
                 'Successfully deleted',
                 200);
         }
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/planningEmploye/{id_employe}",
+     *     summary="Find planning by ID employe",
+     *     description="Returns info of an employe and list of the seances",
+     *     operationId="getPlanningByIdPersonne",
+     *     tags={"employe"},
+     *     consumes={"application/x-www-form-urlencoded"},
+     *     @SWG\Parameter(
+     *         description="ID of employe to return",
+     *         in="path",
+     *         name="id_employe",
+     *         required=true,
+     *         type="integer",
+     *         format="int64"
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Employe not found"
+     *     )
+     * )
+     */
+    public function getPlanningByIdPersonne($id){
+        $employe[0] = Employe::with('Personne','Fonction')->find($id);
+
+
+        if (empty($employe)) {
+            return response()->json(
+                ['error' => 'this employe does not exist'],
+                404);
+        }
+
+        $seances = Seance::orwhere('id_personne_menage', $id)
+            ->orWhere('id_personne_ouvreur', $id)
+            ->orWhere('id_personne_technicien', $id)->get();
+
+        $employe[1] = $seances;
+        return $employe;
+
     }
 }

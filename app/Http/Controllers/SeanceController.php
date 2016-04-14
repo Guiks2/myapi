@@ -416,7 +416,7 @@ class SeanceController extends Controller
      * @SWG\Get(
      *     path="/seance/film/{id_film}",
      *     summary="Display next seances by film id",
-     *     description="Use this method to return a listing of next seances based on film id and dates.",
+     *     description="Use this method to return a listing of next seances based on film id and dates. If no date, from today to the end of the day.",
      *     operationId="getSeancesByIdFilm",
      *     tags={"seance"},
      *     @SWG\Parameter(
