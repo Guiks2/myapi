@@ -379,7 +379,7 @@
                         "in": "formData",
                         "description": "Phone number of the distributor",
                         "type": "string",
-                        "maximum": "255"
+                        "maximum": "15"
                     }
                 ],
                 "responses": {
@@ -559,6 +559,9 @@
                     },
                     "403": {
                         "description": "You're not allowed to access this service."
+                    },
+                    "404": {
+                        "description": "This employee can not be found."
                     },
                     "422": {
                         "description": "Missing or incorrect fields"
