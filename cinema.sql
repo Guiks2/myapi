@@ -4033,6 +4033,7 @@ CREATE TABLE IF NOT EXISTS `membres` (
   PRIMARY KEY (`id_membre`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+INSERT INTO `cinema`.`membres` (`id_membre`, `id_personne`, `id_abonnement`, `date_inscription`, `debut_abonnement`) VALUES (1, '2', '1', '2016-04-01 00:00:00', '2016-04-08 00:00:00');
 -- --------------------------------------------------------
 
 --
@@ -4331,6 +4332,7 @@ CREATE TABLE IF NOT EXISTS `seances` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+INSERT INTO `cinema`.`seances` (`id`, `id_film`, `id_salle`, `id_personne_ouvreur`, `id_personne_technicien`, `id_personne_menage`, `debut_seance`, `fin_seance`) VALUES (1, '1', '1', '4', '5', '6', '2016-04-16 10:00:00', '2016-04-16 11:20:00');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

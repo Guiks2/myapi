@@ -1,13 +1,13 @@
 SET token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6XC9cL215YXBpLmNvbVwvYXV0aGVudGljYXRlIiwiaWF0IjoxNDYwNjQzOTQ0LCJleHAiOjE0NjA4NTk5NDQsIm5iZiI6MTQ2MDY0Mzk0NCwianRpIjoiZTY3M2IzZjgwNGI0ZThmMDQxNjE5NTNiMDEyZWZkZDgifQ.73vFiRmDZ81C9h9YCJJE_a39qz2eJzbO5_PWl6O5gtI
 
 REM Forfait
-
+curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "nom=Forfait%202&resum=R%C3%A9sum%C3%A9%20forfait&prix=30&duree_jours=10" "http://myapi.com/forfait?api_key="%token%
 REM Abonnement
 curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "id_forfait=1&debut=2015-01-01" "http://myapi.com/abonnement?api_key="%token%
 REM Distributeur
 curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "nom=New%20Distributeur&adresse=21%20rue%20erard&cpostal=75008&ville=Paris&pays=France&telephone=01020405" "http://myapi.com/distributeur?api_key="%token%
 REM Employe
-
+curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "id_personne=1&id_fonction=1" "http://myapi.com/employe?api_key="%token%
 REM Genre
 curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "nom=New%20wave" "http://myapi.com/genre?api_key="%token%
 REM Film
@@ -15,7 +15,7 @@ curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header
 REM Fonction
 curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "nom=associ%C3%A9&salaire=30000&cadre=1" "http://myapi.com/fonction?api_key="%token%
 REM HistoriqueMembre
-
+curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "id_membre=1&id_seance=1&date=2016-04-16 10:00:00" "http://myapi.com/historique_membre?api_key="%token%
 REM Membre
 curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "id_personne=1&id_abonnement=1&date_inscription=2015-08-17&debut_abonnement=2015-09-01" "http://myapi.com/membre?api_key="%token%
 REM Personne
