@@ -456,15 +456,15 @@
                         "name": "id_genre",
                         "in": "formData",
                         "description": "Genre ID",
-                        "required": true,
-                        "type": "integer"
+                        "type": "integer",
+                        "format": "int64"
                     },
                     {
                         "name": "id_distributeur",
                         "in": "formData",
                         "description": "Distributor ID",
-                        "required": true,
-                        "type": "integer"
+                        "type": "integer",
+                        "format": "int64"
                     },
                     {
                         "name": "titre",
@@ -472,43 +472,44 @@
                         "description": "Name of the movie",
                         "required": true,
                         "type": "string",
+                        "format": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "resum",
                         "in": "formData",
                         "description": "Resume of the movie",
-                        "required": true,
                         "type": "string",
+                        "format": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "date_debut_affiche",
                         "in": "formData",
                         "description": "Starting date",
-                        "required": true,
-                        "type": "string"
+                        "type": "string",
+                        "format": "date"
                     },
                     {
                         "name": "date_fin_affiche",
                         "in": "formData",
                         "description": "Ending date",
-                        "required": true,
-                        "type": "string"
+                        "type": "string",
+                        "format": "date"
                     },
                     {
                         "name": "duree_minutes",
                         "in": "formData",
                         "description": "Duration",
-                        "required": true,
-                        "type": "integer"
+                        "type": "integer",
+                        "format": "int64"
                     },
                     {
                         "name": "annee_production",
                         "in": "formData",
                         "description": "Production year",
-                        "required": true,
                         "type": "integer",
+                        "format": "int64",
                         "maximum": "4"
                     }
                 ],
@@ -665,6 +666,9 @@
                 "responses": {
                     "200": {
                         "description": "Movie deleted"
+                    },
+                    "403": {
+                        "description": "Permission required"
                     },
                     "404": {
                         "description": "Movie not found"
@@ -1021,6 +1025,14 @@
                 ],
                 "parameters": [
                     {
+                        "name": "id_genre",
+                        "in": "path",
+                        "description": "ID genre",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "11"
+                    },
+                    {
                         "name": "nom",
                         "in": "formData",
                         "description": "Nom du genre",
@@ -1161,7 +1173,7 @@
                     {
                         "name": "id_membre",
                         "in": "path",
-                        "description": "id of person to fetch",
+                        "description": "id of member to fetch",
                         "type": "integer"
                     }
                 ],
@@ -1234,7 +1246,7 @@
                     "200": {
                         "description": "Member updated",
                         "schema": {
-                            "$ref": "#/definitions/Personne"
+                            "$ref": "#/definitions/Membre"
                         }
                     },
                     "422": {
@@ -1246,7 +1258,7 @@
                 "tags": [
                     "membre"
                 ],
-                "summary": "Delete a Person",
+                "summary": "Delete a Member",
                 "description": "Use this method to delete a member based on its id.",
                 "operationId": "deleteMember",
                 "parameters": [
@@ -2124,6 +2136,63 @@
                     },
                     "404": {
                         "description": "Invalid seance value"
+                    }
+                }
+            }
+        },
+        "/seance/film/{id_film}": {
+            "get": {
+                "tags": [
+                    "seance"
+                ],
+                "summary": "Display next seances by id Film",
+                "description": "Use this method to return a listing of next seances based on film id and dates.",
+                "operationId": "getSeancesByIdFilm",
+                "parameters": [
+                    {
+                        "name": "id_film",
+                        "in": "path",
+                        "description": "ID of film to get seances",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "date_debut",
+                        "in": "query",
+                        "description": "Beginning date to get seances",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
+                        "name": "date_fin",
+                        "in": "query",
+                        "description": "Ending date to get seances",
+                        "type": "string",
+                        "format": "date"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Seance"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Successful operation but there isn't seance with this film or dates",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Seance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Film not found"
                     }
                 }
             }
