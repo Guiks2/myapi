@@ -225,6 +225,11 @@ class FonctionController extends Controller
             }
 
             $fonction = Fonction::find($id);
+            if(empty($fonction)){
+                return response()->json(
+                    ['error' => 'Function not found'],
+                    404);
+            }
             $fonction->nom = $request->nom != null ? $request->nom : $fonction->nom;
             $fonction->salaire = $request->salaire != null ? $request->salaire : $fonction->salaire;
             $fonction->cadre = $request->cadre != null ? $request->cadre : $fonction->cadre;
