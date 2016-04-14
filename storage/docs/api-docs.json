@@ -74,6 +74,9 @@
                     }
                 ],
                 "responses": {
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
                     "201": {
                         "description": "Subscription created",
                         "schema": {
@@ -142,6 +145,9 @@
                     }
                 ],
                 "responses": {
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
                     "200": {
                         "description": "Subscription updated",
                         "schema": {
@@ -171,6 +177,9 @@
                     }
                 ],
                 "responses": {
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
                     "200": {
                         "description": "Subscription deleted"
                     },
@@ -413,9 +422,9 @@
                 "tags": [
                     "film"
                 ],
-                "summary": "Get a film list",
-                "description": "Use this method to return a listing of films.",
-                "operationId": "listFilm",
+                "summary": "Get a movie list",
+                "description": "Use this method to return a listing of all movies.",
+                "operationId": "indexFilm",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -436,17 +445,31 @@
                     "film"
                 ],
                 "summary": "Create a film",
-                "description": "Use this method to create a new film.",
-                "operationId": "createFilm",
+                "description": "Use this method to create a new movie.",
+                "operationId": "storeFilm",
                 "consumes": [
                     "multipart/form-data",
                     "application/x-www-form-urlencoded"
                 ],
                 "parameters": [
                     {
+                        "name": "id_genre",
+                        "in": "formData",
+                        "description": "Genre ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_distributeur",
+                        "in": "formData",
+                        "description": "Distributor ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
                         "name": "titre",
                         "in": "formData",
-                        "description": "Name of the film",
+                        "description": "Name of the movie",
                         "required": true,
                         "type": "string",
                         "maximum": "255"
@@ -454,7 +477,7 @@
                     {
                         "name": "resum",
                         "in": "formData",
-                        "description": "Resume of the film",
+                        "description": "Resume of the movie",
                         "required": true,
                         "type": "string",
                         "maximum": "255"
@@ -462,28 +485,28 @@
                     {
                         "name": "date_debut_affiche",
                         "in": "formData",
-                        "description": "Date d\u00e9but affiche",
+                        "description": "Starting date",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "name": "date_fin_affiche",
                         "in": "formData",
-                        "description": "Date fin affiche",
+                        "description": "Ending date",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "name": "duree_minutes",
                         "in": "formData",
-                        "description": "Dur\u00e9e en minutes",
+                        "description": "Duration",
                         "required": true,
                         "type": "integer"
                     },
                     {
                         "name": "annee_production",
                         "in": "formData",
-                        "description": "Ann\u00e9e de production",
+                        "description": "Production year",
                         "required": true,
                         "type": "integer",
                         "maximum": "4"
@@ -496,8 +519,11 @@
                             "$ref": "#/definitions/Film"
                         }
                     },
+                    "403": {
+                        "description": "Permission required"
+                    },
                     "422": {
-                        "description": "Champs manquant obligatoire ou incorrect"
+                        "description": "Missing or incorrect field"
                     }
                 }
             }
@@ -507,15 +533,17 @@
                 "tags": [
                     "film"
                 ],
-                "summary": "Display a single film",
-                "description": "Use this method to return a single film attributes based on its id.",
+                "summary": "Display a single movie",
+                "description": "Use this method to return a single movie attributes based on its id.",
                 "operationId": "showFilm",
                 "parameters": [
                     {
                         "name": "id_film",
                         "in": "path",
-                        "description": "id of film to fetch",
-                        "type": "integer"
+                        "description": "Movie ID",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
                     }
                 ],
                 "responses": {
@@ -526,7 +554,7 @@
                         }
                     },
                     "404": {
-                        "description": "Film not found"
+                        "description": "Movie not found"
                     }
                 }
             },
@@ -534,8 +562,8 @@
                 "tags": [
                     "film"
                 ],
-                "summary": "Update a film",
-                "description": "Use this method to update the attributes of a film based on its id.",
+                "summary": "Update a movie",
+                "description": "Use this method to update the attributes of a movie based on its id.",
                 "operationId": "updateFilm",
                 "consumes": [
                     "multipart/form-data",
@@ -543,47 +571,61 @@
                 ],
                 "parameters": [
                     {
+                        "name": "id_film",
+                        "in": "path",
+                        "description": "Movie ID",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "id_genre",
+                        "in": "formData",
+                        "description": "Genre ID",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_distributeur",
+                        "in": "formData",
+                        "description": "Distributor ID",
+                        "type": "integer"
+                    },
+                    {
                         "name": "titre",
                         "in": "formData",
-                        "description": "Name of the film",
-                        "required": true,
+                        "description": "Name of the movie",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "resum",
                         "in": "formData",
-                        "description": "Resume of the film",
-                        "required": true,
+                        "description": "Resume of the movie",
                         "type": "string",
                         "maximum": "255"
                     },
                     {
                         "name": "date_debut_affiche",
                         "in": "formData",
-                        "description": "Date d\u00e9but affiche",
-                        "required": true,
+                        "description": "Starting date",
                         "type": "string"
                     },
                     {
                         "name": "date_fin_affiche",
                         "in": "formData",
-                        "description": "Date fin affiche",
-                        "required": true,
+                        "description": "Ending date",
                         "type": "string"
                     },
                     {
                         "name": "duree_minutes",
                         "in": "formData",
-                        "description": "Dur\u00e9e en minutes",
-                        "required": true,
+                        "description": "Duration",
                         "type": "integer"
                     },
                     {
                         "name": "annee_production",
                         "in": "formData",
-                        "description": "Ann\u00e9e de production",
-                        "required": true,
+                        "description": "Production year",
                         "type": "integer",
                         "maximum": "4"
                     }
@@ -595,8 +637,11 @@
                             "$ref": "#/definitions/Film"
                         }
                     },
+                    "404": {
+                        "description": "Movie not found"
+                    },
                     "422": {
-                        "description": "Champs manquants obligatoires ou incorrects"
+                        "description": "Missing or incorrect fields"
                     }
                 }
             },
@@ -605,13 +650,13 @@
                     "film"
                 ],
                 "summary": "Delete a film",
-                "description": "Use this method to delete a film based on its id.",
-                "operationId": "deleteFilm",
+                "description": "Use this method to delete a movie based on its id.",
+                "operationId": "destroyFilm",
                 "parameters": [
                     {
                         "name": "id_film",
                         "in": "path",
-                        "description": "Film ID to delete",
+                        "description": "Movie ID",
                         "required": true,
                         "type": "integer",
                         "format": "int64"
@@ -619,10 +664,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "FIlm deleted"
+                        "description": "Movie deleted"
                     },
                     "404": {
-                        "description": "Invalid film value"
+                        "description": "Movie not found"
                     }
                 }
             }
@@ -632,14 +677,15 @@
                 "tags": [
                     "film"
                 ],
-                "summary": "Display films by ditributor",
-                "description": "Use this method to return a listing of films based on distributors id.",
+                "summary": "Display movies by ditributor",
+                "description": "Use this method to return a listing of movies based on distributors id.",
                 "operationId": "listFilmsByDistributor",
                 "parameters": [
                     {
                         "name": "id_distributeur",
                         "in": "path",
-                        "description": "id of distributor to fetch",
+                        "description": "Distributor ID",
+                        "required": true,
                         "type": "integer"
                     }
                 ],
@@ -652,6 +698,9 @@
                                 "$ref": "#/definitions/Film"
                             }
                         }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
                     },
                     "404": {
                         "description": "Distributor not found"
@@ -664,14 +713,15 @@
                 "tags": [
                     "film"
                 ],
-                "summary": "Display films by genre",
-                "description": "Use this method to return a listing of films based on genre id.",
+                "summary": "Display movies by genre",
+                "description": "Use this method to return a listing of movies based on genre id.",
                 "operationId": "listFilmsByGenre",
                 "parameters": [
                     {
                         "name": "id_genre",
                         "in": "path",
-                        "description": "id of genre to fetch",
+                        "description": "Genre ID",
+                        "required": true,
                         "type": "integer"
                     }
                 ],
@@ -685,8 +735,195 @@
                             }
                         }
                     },
+                    "204": {
+                        "description": "The request didn't return any content."
+                    },
                     "404": {
                         "description": "Genre not found"
+                    }
+                }
+            }
+        },
+        "/fonction": {
+            "get": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Get function list",
+                "description": "Use this method to return a listing of functions.",
+                "operationId": "listFunction",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Fonction"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Create a function",
+                "description": "Use this method to create a new function.",
+                "operationId": "createFunction",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the function",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "salaire",
+                        "in": "formData",
+                        "description": "Salary of the function",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "cadre",
+                        "in": "formData",
+                        "description": "Salary of the function",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Function created",
+                        "schema": {
+                            "$ref": "#/definitions/Fonction"
+                        }
+                    },
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "422": {
+                        "description": "Missing or incorrect fields"
+                    }
+                }
+            }
+        },
+        "/fonction/{id_fonction}": {
+            "get": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Display a function",
+                "description": "Use this method to return a single function attributes based on its id.",
+                "operationId": "showFunction",
+                "parameters": [
+                    {
+                        "name": "id_fonction",
+                        "in": "path",
+                        "description": "Id of function to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Fonction"
+                        }
+                    },
+                    "404": {
+                        "description": "Function not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Update a function",
+                "description": "Use this method to update the attributes of a function based on its id.",
+                "operationId": "updateFunction",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_fonction",
+                        "in": "formData",
+                        "description": "Name of the function",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the function",
+                        "type": "string"
+                    },
+                    {
+                        "name": "salaire",
+                        "in": "formData",
+                        "description": "Salary of the function",
+                        "type": "string"
+                    },
+                    {
+                        "name": "cadre",
+                        "in": "formData",
+                        "description": "Senior status of the function",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Function updated",
+                        "schema": {
+                            "$ref": "#/definitions/Fonction"
+                        }
+                    },
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "422": {
+                        "description": "Missing or incorrect fields"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Delete a function",
+                "description": "Use this method to delete a function based on its id.",
+                "operationId": "deleteFunction",
+                "parameters": [
+                    {
+                        "name": "id_fonction",
+                        "in": "path",
+                        "description": "Function id to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "200": {
+                        "description": "Function deleted"
+                    },
+                    "404": {
+                        "description": "Invalid function value"
                     }
                 }
             }
@@ -827,6 +1064,207 @@
                     },
                     "404": {
                         "description": "Invalid genre ID"
+                    }
+                }
+            }
+        },
+        "/membre": {
+            "get": {
+                "tags": [
+                    "membre"
+                ],
+                "summary": "Get a member list",
+                "description": "Use this method to return a listing of member.",
+                "operationId": "listMember",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Membre"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "membre"
+                ],
+                "summary": "Create a member",
+                "description": "Use this method to create a new member.",
+                "operationId": "createMember",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_personne",
+                        "in": "formData",
+                        "description": "Person ID of the member",
+                        "required": true,
+                        "type": "number",
+                        "maximum": "11"
+                    },
+                    {
+                        "name": "id_abonnement",
+                        "in": "formData",
+                        "description": "Subscribe ID of the member",
+                        "required": true,
+                        "type": "number",
+                        "maximum": "11"
+                    },
+                    {
+                        "name": "date_inscription",
+                        "in": "formData",
+                        "description": "Inscription date of the member",
+                        "required": true,
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
+                        "name": "debut_abonnement",
+                        "in": "formData",
+                        "description": "Initial date of the member subscription",
+                        "required": true,
+                        "type": "string",
+                        "format": "date"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Member created",
+                        "schema": {
+                            "$ref": "#/definitions/Membre"
+                        }
+                    },
+                    "422": {
+                        "description": "Required fields missing or incorrect"
+                    }
+                }
+            }
+        },
+        "/membre/{id_membre}": {
+            "get": {
+                "tags": [
+                    "membre"
+                ],
+                "summary": "Display a single member",
+                "description": "Use this method to return a single member attributes based on its id.",
+                "operationId": "showMember",
+                "parameters": [
+                    {
+                        "name": "id_membre",
+                        "in": "path",
+                        "description": "id of person to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Membre"
+                        }
+                    },
+                    "404": {
+                        "description": "Member not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "membre"
+                ],
+                "summary": "Update a member",
+                "description": "Use this method to update the attributes of a member based on its id.",
+                "operationId": "updateMember",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_membre",
+                        "in": "path",
+                        "description": "ID person",
+                        "required": true,
+                        "type": "integer",
+                        "maximum": "11"
+                    },
+                    {
+                        "name": "id_personne",
+                        "in": "formData",
+                        "description": "Person ID of the member",
+                        "required": false,
+                        "type": "number",
+                        "maximum": "11"
+                    },
+                    {
+                        "name": "id_abonnement",
+                        "in": "formData",
+                        "description": "Subscribe ID of the member",
+                        "required": false,
+                        "type": "number",
+                        "maximum": "11"
+                    },
+                    {
+                        "name": "date_inscription",
+                        "in": "formData",
+                        "description": "Inscription date of the member",
+                        "required": false,
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
+                        "name": "debut_abonnement",
+                        "in": "formData",
+                        "description": "Initial date of the member subscription",
+                        "required": false,
+                        "type": "string",
+                        "format": "date"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Member updated",
+                        "schema": {
+                            "$ref": "#/definitions/Personne"
+                        }
+                    },
+                    "422": {
+                        "description": "Required fields missing or incorrect"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "membre"
+                ],
+                "summary": "Delete a Person",
+                "description": "Use this method to delete a member based on its id.",
+                "operationId": "deleteMember",
+                "parameters": [
+                    {
+                        "name": "id_membre",
+                        "in": "path",
+                        "description": "Member ID to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Member deleted"
+                    },
+                    "404": {
+                        "description": "Invalid member value"
                     }
                 }
             }
@@ -1270,7 +1708,7 @@
                 ],
                 "summary": "Delete a reduction",
                 "description": "Use this method to delete a reduction based on its id.",
-                "operationId": "deleteDistributor",
+                "operationId": "deleteReduction",
                 "parameters": [
                     {
                         "name": "id_reduction",
