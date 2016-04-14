@@ -143,7 +143,7 @@ class FilmController extends Controller
         } else {
             $validator = Validator::make($request->all(), [
                 'id_genre' => 'required|exists:genres|numeric',
-                'id_distributeur' => 'required|exists:distributeurs|numeric'
+                'id_distributeur' => 'required|exists:distributeurs|numeric',
                 'titre' => 'required|unique:films|max:255',
                 'resum' => 'required|max:255',
                 'date_debut_affiche' => 'required|date|before:'.$request->date_fin_affiche,
@@ -308,6 +308,8 @@ class FilmController extends Controller
                 403);
         } else {
             $validator = Validator::make($request->all(), [
+                'id_genre' => 'exists:genres|numeric',
+                'id_distributeur' => 'exists:distributeurs|numeric',
                 'titre' => 'unique:films|max:255',
                 'resum' => 'max:255',
                 'date_debut_affiche' => 'date|before:' . $request->date_fin_affiche,
@@ -404,6 +406,7 @@ class FilmController extends Controller
      *          name="id_distributeur",
      *          in="path",
      *          type="integer",
+     *          required=true,
      *          description="Distributor ID",
      *      ),
      *      @SWG\Response(
@@ -452,6 +455,7 @@ class FilmController extends Controller
      *          name="id_genre",
      *          in="path",
      *          type="integer",
+     *          required=true,
      *          description="Genre ID",
      *      ),
      *      @SWG\Response(
