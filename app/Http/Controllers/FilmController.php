@@ -60,14 +60,12 @@ class FilmController extends Controller
      *         description="Genre ID",
      *         in="formData",
      *         name="id_genre",
-     *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
      *         description="Distributor ID",
      *         in="formData",
      *         name="id_distributeur",
-     *         required=true,
      *         type="integer"
      *     ),    
      *     @SWG\Parameter(
@@ -82,7 +80,6 @@ class FilmController extends Controller
      *         description="Resume of the movie",
      *         in="formData",
      *         name="resum",
-     *         required=true,
      *         type="string",
      *         maximum="255"
      *     ),
@@ -90,28 +87,24 @@ class FilmController extends Controller
      *         description="Starting date",
      *         in="formData",
      *         name="date_debut_affiche",
-     *         required=true,
      *         type="string"
      *     ),
      *     @SWG\Parameter(
      *         description="Ending date",
      *         in="formData",
      *         name="date_fin_affiche",
-     *         required=true,
      *         type="string"
      *     ),
      *     @SWG\Parameter(
      *         description="Duration",
      *         in="formData",
      *         name="duree_minutes",
-     *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
      *         description="Production year",
      *         in="formData",
      *         name="annee_production",
-     *         required=true,
      *         type="integer",
      *         maximum="4"
      *     ),
@@ -142,14 +135,14 @@ class FilmController extends Controller
                 403);
         } else {
             $validator = Validator::make($request->all(), [
-                'id_genre' => 'required|exists:genres|numeric',
-                'id_distributeur' => 'required|exists:distributeurs|numeric',
+                'id_genre' => 'exists:genres|numeric',
+                'id_distributeur' => 'exists:distributeurs|numeric',
                 'titre' => 'required|unique:films|max:255',
-                'resum' => 'required|max:255',
-                'date_debut_affiche' => 'required|date|before:'.$request->date_fin_affiche,
-                'date_fin_affiche' => 'required|date|after:'.$request->date_debut_affiche,
-                'duree_minutes' => 'required|numeric',
-                'annee_production' => 'required|digits:4'
+                'resum' => 'max:255',
+                'date_debut_affiche' => 'date|before:'.$request->date_fin_affiche,
+                'date_fin_affiche' => 'date|after:'.$request->date_debut_affiche,
+                'duree_minutes' => 'numeric',
+                'annee_production' => 'digits:4'
             ]);
 
             if($validator->fails()){
