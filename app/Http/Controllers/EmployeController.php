@@ -285,12 +285,12 @@ class EmployeController extends Controller
      * @SWG\Get(
      *     path="/planningEmploye/{id_employe}",
      *     summary="Find planning by ID employe",
-     *     description="Returns info of an employe and list of the seances",
+     *     description="Returns info of an employee and list of the seances",
      *     operationId="getPlanningByIdPersonne",
      *     tags={"employe"},
      *     consumes={"application/x-www-form-urlencoded"},
      *     @SWG\Parameter(
-     *         description="ID of employe to return",
+     *         description="ID of employee to return",
      *         in="path",
      *         name="id_employe",
      *         required=true,
@@ -303,7 +303,7 @@ class EmployeController extends Controller
      *     ),
      *     @SWG\Response(
      *         response="404",
-     *         description="Employe not found"
+     *         description="Employee not found"
      *     )
      * )
      */
@@ -313,7 +313,7 @@ class EmployeController extends Controller
 
         if (empty($employe)) {
             return response()->json(
-                ['error' => 'this employe does not exist'],
+                ['error' => 'this employee does not exist'],
                 404);
         }
 
