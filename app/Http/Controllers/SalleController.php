@@ -82,7 +82,7 @@ class SalleController extends Controller
      *         response=201,
      *         description="Room created",
      *         @SWG\Schema(
-     *              ref="#/definitions/Genre",
+     *              ref="#/definitions/Salle",
      *         ),
      *     ),
      *     @SWG\Response(
