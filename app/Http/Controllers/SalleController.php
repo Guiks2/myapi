@@ -14,7 +14,7 @@ class SalleController extends Controller
      * @SWG\Get(
      *     path="/salle",
      *     summary="Display a listing of rooms.",
-     *     operationId="indexSalle"
+     *     operationId="indexSalle",
      *     tags={"salle"},
      *     @SWG\Response(
      *          response=200,
@@ -218,7 +218,7 @@ class SalleController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'numero_salle' => 'unique:salles|numeric'
+            'numero_salle' => 'unique:salles|numeric',
             'nom_salle' => 'unique:salles|max:255',
             'etage_salle' => 'numeric',
             'places' => 'numeric'
