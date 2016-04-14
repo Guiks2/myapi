@@ -60,15 +60,15 @@ class FilmController extends Controller
      *         description="Genre ID",
      *         in="formData",
      *         name="id_genre",
-     *         required=true,
-     *         type="integer"
+     *         type="integer",
+     *         format="int64"
      *     ),
      *     @SWG\Parameter(
      *         description="Distributor ID",
      *         in="formData",
      *         name="id_distributeur",
-     *         required=true,
-     *         type="integer"
+     *         type="integer",
+     *         format="int64"
      *     ),    
      *     @SWG\Parameter(
      *         description="Name of the movie",
@@ -76,44 +76,45 @@ class FilmController extends Controller
      *         name="titre",
      *         required=true,
      *         type="string",
-     *         maximum="255"
+     *         maximum="255",
+     *         format="string"
      *     ),
      *     @SWG\Parameter(
      *         description="Resume of the movie",
      *         in="formData",
      *         name="resum",
-     *         required=true,
      *         type="string",
-     *         maximum="255"
+     *         maximum="255",
+     *         format="string"
      *     ),
      *     @SWG\Parameter(
      *         description="Starting date",
      *         in="formData",
      *         name="date_debut_affiche",
-     *         required=true,
-     *         type="string"
+     *         type="string",
+     *         format="date"
      *     ),
      *     @SWG\Parameter(
      *         description="Ending date",
      *         in="formData",
      *         name="date_fin_affiche",
-     *         required=true,
-     *         type="string"
+     *         type="string",
+     *         format="date"
      *     ),
      *     @SWG\Parameter(
      *         description="Duration",
      *         in="formData",
      *         name="duree_minutes",
-     *         required=true,
-     *         type="integer"
+     *         type="integer",
+     *         format="int64"
      *     ),
      *     @SWG\Parameter(
      *         description="Production year",
      *         in="formData",
      *         name="annee_production",
-     *         required=true,
      *         type="integer",
-     *         maximum="4"
+     *         maximum="4",
+     *         format="int64"
      *     ),
      *     @SWG\Response(
      *          response=201,
@@ -142,14 +143,14 @@ class FilmController extends Controller
                 403);
         } else {
             $validator = Validator::make($request->all(), [
-                'id_genre' => 'required|exists:genres|numeric',
-                'id_distributeur' => 'required|exists:distributeurs|numeric',
+                'id_genre' => 'exists:genres|numeric',
+                'id_distributeur' => 'exists:distributeurs|numeric',
                 'titre' => 'required|unique:films|max:255',
-                'resum' => 'required|max:255',
-                'date_debut_affiche' => 'required|date|before:'.$request->date_fin_affiche,
-                'date_fin_affiche' => 'required|date|after:'.$request->date_debut_affiche,
-                'duree_minutes' => 'required|numeric',
-                'annee_production' => 'required|digits:4'
+                'resum' => 'max:255',
+                'date_debut_affiche' => 'required|date|before:date_fin_affiche',
+                'date_fin_affiche' => 'required|date|after:date_debut_affiche',
+                'duree_minutes' => 'numeric',
+                'annee_production' => 'digits:4'
             ]);
 
             if($validator->fails()){
@@ -312,8 +313,8 @@ class FilmController extends Controller
                 'id_distributeur' => 'exists:distributeurs|numeric',
                 'titre' => 'unique:films|max:255',
                 'resum' => 'max:255',
-                'date_debut_affiche' => 'date|before:' . $request->date_fin_affiche,
-                'date_fin_affiche' => 'date|after:' . $request->date_debut_affiche,
+                'date_debut_affiche' => 'date|before:date_debut_affiche',
+                'date_fin_affiche' => 'date|after:date_fin_affiche',
                 'duree_minutes' => 'numeric',
                 'annee_production' => 'digits:4'
             ]);
@@ -368,6 +369,10 @@ class FilmController extends Controller
      *         description="Movie deleted"
      *     ),
      *     @SWG\Response(
+     *         response=403,
+     *         description="Permission required"
+     *     ),
+     *     @SWG\Response(
      *         response=404,
      *         description="Movie not found"
      *     )
@@ -392,6 +397,10 @@ class FilmController extends Controller
             }
 
             $film->delete();
+
+            return response()->json(
+                'Successfully deleted',
+                200);
         }
     }
 

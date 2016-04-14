@@ -396,9 +396,15 @@ class SeanceController extends Controller
         } else {
             $date_debut = $request->date_debut;
         }
+        if(empty($request->date_fin) || $date_debut > $request->date_fin){
+            $date_fin = date('Y-m-d', '+1 day').' 00:00:00';
+        } else {
+            $date_fin = $request->date_fin;
+        }
 
         $seances = Seance::where('id_film', $id)
             ->where('debut_seance', '>=', $date_debut)
+            ->where('debut_seance', '<=', $date_fin)
             ->orderBy('id_film')
             ->get();
 
