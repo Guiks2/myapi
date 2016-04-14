@@ -234,10 +234,15 @@ class ReductionController extends Controller
         }
 
         $reduction = Reduction::find($id);
-        $reduction->nom = $request->nom;
-        $reduction->date_debut = $request->date_debut;
-        $reduction->date_fin = $request->date_fin;
-        $reduction->pourcentage_reduction = $request->pourcentage_reduction;
+        if(empty($reduction)){
+            return response()->json(
+                ['error' => 'Reduction not found'],
+                404);
+        }
+        $reduction->nom = $request->nom != null ? $request->nom : $reduction->nom;
+        $reduction->date_debut = $request->date_debut != null ? $request->date_debut : $reduction->date_debut;
+        $reduction->date_fin = $request->date_fin != null ? $request->date_fin : $reduction->date_fin;
+        $reduction->pourcentage_reduction = $request->pourcentage_reduction != null ? $request->pourcentage_reduction : $reduction->pourcentage_reduction;
         $reduction->save();
 
         return response()->json(
@@ -282,5 +287,8 @@ class ReductionController extends Controller
         }
 
         $reduction->delete();
+        return response()->json(
+            'Successfully deleted',
+            200);
     }
 }
