@@ -23,6 +23,172 @@
         "application/json"
     ],
     "paths": {
+        "/abonnement": {
+            "get": {
+                "tags": [
+                    "abonnement"
+                ],
+                "summary": "Get subscription list",
+                "description": "Use this method to return a listing of subscriptions.",
+                "operationId": "listSubscription",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Abonnement"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "abonnement"
+                ],
+                "summary": "Create a subscription",
+                "description": "Use this method to create a new subscription.",
+                "operationId": "createSubscription",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_forfait",
+                        "in": "formData",
+                        "description": "Id of the forfait",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "debut",
+                        "in": "formData",
+                        "description": "Initial date of the subscription",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "201": {
+                        "description": "Subscription created",
+                        "schema": {
+                            "$ref": "#/definitions/Abonnement"
+                        }
+                    },
+                    "422": {
+                        "description": "Champs manquant obligatoire ou incorrect"
+                    }
+                }
+            }
+        },
+        "/abonnement/{id_abonnement}": {
+            "get": {
+                "tags": [
+                    "abonnement"
+                ],
+                "summary": "Display a subscription",
+                "description": "Use this method to return a single subscription attributes based on its id.",
+                "operationId": "showSubscription",
+                "parameters": [
+                    {
+                        "name": "id_abonnement",
+                        "in": "path",
+                        "description": "Id of subscription to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Abonnement"
+                        }
+                    },
+                    "404": {
+                        "description": "Subscription not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "abonnement"
+                ],
+                "summary": "Update a subscription",
+                "description": "Use this method to update the attributes of a subscription based on its id.",
+                "operationId": "updateSubscription",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_forfait",
+                        "in": "formData",
+                        "description": "Name of the subscription",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "debut",
+                        "in": "formData",
+                        "description": "Start date of the subscription",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "200": {
+                        "description": "Subscription updated",
+                        "schema": {
+                            "$ref": "#/definitions/Abonnement"
+                        }
+                    },
+                    "422": {
+                        "description": "Champs manquants obligatoires ou incorrects"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "abonnement"
+                ],
+                "summary": "Delete a subscription",
+                "description": "Use this method to delete a subscription based on its id.",
+                "operationId": "deleteSubscription",
+                "parameters": [
+                    {
+                        "name": "id_abonnement",
+                        "in": "path",
+                        "description": "Subscription id to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "200": {
+                        "description": "Subscription deleted"
+                    },
+                    "404": {
+                        "description": "Invalid subscription value"
+                    }
+                }
+            }
+        },
         "/distributeur": {
             "get": {
                 "tags": [
@@ -466,6 +632,254 @@
                     },
                     "404": {
                         "description": "Invalid film value"
+                    }
+                }
+            }
+        },
+        "/film/distributeur/{id_distributeur}": {
+            "get": {
+                "tags": [
+                    "film"
+                ],
+                "summary": "Display films by ditributor",
+                "description": "Use this method to return a listing of films based on distributors id.",
+                "operationId": "listFilmsByDistributor",
+                "parameters": [
+                    {
+                        "name": "id_distributeur",
+                        "in": "path",
+                        "description": "id of distributor to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Film"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Distributor not found"
+                    }
+                }
+            }
+        },
+        "/film/genre/{id_genre}": {
+            "get": {
+                "tags": [
+                    "film"
+                ],
+                "summary": "Display films by genre",
+                "description": "Use this method to return a listing of films based on genre id.",
+                "operationId": "listFilmsByGenre",
+                "parameters": [
+                    {
+                        "name": "id_genre",
+                        "in": "path",
+                        "description": "id of genre to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Film"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Genre not found"
+                    }
+                }
+            }
+        },
+        "/fonction": {
+            "get": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Get function list",
+                "description": "Use this method to return a listing of functions.",
+                "operationId": "listFunction",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Fonction"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Create a function",
+                "description": "Use this method to create a new function.",
+                "operationId": "createFunction",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the function",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "salaire",
+                        "in": "formData",
+                        "description": "Salary of the function",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "cadre",
+                        "in": "formData",
+                        "description": "Salary of the function",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Function created",
+                        "schema": {
+                            "$ref": "#/definitions/Fonction"
+                        }
+                    },
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "422": {
+                        "description": "Missing or incorrect fields"
+                    }
+                }
+            }
+        },
+        "/fonction/{id_fonction}": {
+            "get": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Display a function",
+                "description": "Use this method to return a single function attributes based on its id.",
+                "operationId": "showFunction",
+                "parameters": [
+                    {
+                        "name": "id_fonction",
+                        "in": "path",
+                        "description": "Id of function to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Fonction"
+                        }
+                    },
+                    "404": {
+                        "description": "Function not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Update a function",
+                "description": "Use this method to update the attributes of a function based on its id.",
+                "operationId": "updateFunction",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_fonction",
+                        "in": "formData",
+                        "description": "Name of the function",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "nom",
+                        "in": "formData",
+                        "description": "Name of the function",
+                        "type": "string"
+                    },
+                    {
+                        "name": "salaire",
+                        "in": "formData",
+                        "description": "Salary of the function",
+                        "type": "string"
+                    },
+                    {
+                        "name": "cadre",
+                        "in": "formData",
+                        "description": "Senior status of the function",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Function updated",
+                        "schema": {
+                            "$ref": "#/definitions/Fonction"
+                        }
+                    },
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "422": {
+                        "description": "Missing or incorrect fields"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "fonction"
+                ],
+                "summary": "Delete a function",
+                "description": "Use this method to delete a function based on its id.",
+                "operationId": "deleteFunction",
+                "parameters": [
+                    {
+                        "name": "id_fonction",
+                        "in": "path",
+                        "description": "Function id to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "You don't have authorization for this content"
+                    },
+                    "200": {
+                        "description": "Function deleted"
+                    },
+                    "404": {
+                        "description": "Invalid function value"
                     }
                 }
             }
@@ -1043,6 +1457,231 @@
                     },
                     "404": {
                         "description": "Invalid room ID"
+                    }
+                }
+            }
+        },
+        "/seance": {
+            "get": {
+                "tags": [
+                    "seance"
+                ],
+                "summary": "Display a listing of seances.",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Seance"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "seance"
+                ],
+                "summary": "Create a seance",
+                "description": "Use this method to create a seance",
+                "operationId": "createSeance",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_film",
+                        "in": "formData",
+                        "description": "ID of the movie",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_salle",
+                        "in": "formData",
+                        "description": "ID of the room",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_personne_ouvreur",
+                        "in": "formData",
+                        "description": "ID of the opener person",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_personne_technicien",
+                        "in": "formData",
+                        "description": "ID of the tech person",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_personne_menage",
+                        "in": "formData",
+                        "description": "ID of the cleaning person",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "debut_seance",
+                        "in": "formData",
+                        "description": "Starting time of the seance",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "fin_seance",
+                        "in": "formData",
+                        "description": "Ending time of the seance",
+                        "required": true,
+                        "type": "string",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Seance created",
+                        "schema": {
+                            "$ref": "#/definitions/Seance"
+                        }
+                    },
+                    "422": {
+                        "description": "Missing required fields"
+                    }
+                }
+            }
+        },
+        "/seance/{id_seance}": {
+            "get": {
+                "tags": [
+                    "seance"
+                ],
+                "summary": "Display a single seance",
+                "description": "Use this method to return a single seance attributes based on its id.",
+                "operationId": "showSeance",
+                "parameters": [
+                    {
+                        "name": "id_seance",
+                        "in": "path",
+                        "description": "id of seance to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Seance"
+                        }
+                    },
+                    "404": {
+                        "description": "Seance not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "seance"
+                ],
+                "summary": "Update a seance",
+                "description": "Use this method to update the attributes of a seance based on its id.",
+                "operationId": "updateSeance",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_seance",
+                        "in": "path",
+                        "description": "ID of the seance",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_film",
+                        "in": "formData",
+                        "description": "ID of the movie",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_salle",
+                        "in": "formData",
+                        "description": "ID of the room",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_personne_ouvreur",
+                        "in": "formData",
+                        "description": "ID of the opener person",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_personne_technicien",
+                        "in": "formData",
+                        "description": "ID of the tech person",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_personne_menage",
+                        "in": "formData",
+                        "description": "ID of the cleaning person",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "debut_seance",
+                        "in": "formData",
+                        "description": "Starting time of the seance",
+                        "type": "string",
+                        "maximum": "255"
+                    },
+                    {
+                        "name": "fin_seance",
+                        "in": "formData",
+                        "description": "Ending time of the seance",
+                        "type": "string",
+                        "maximum": "255"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Seance updated",
+                        "schema": {
+                            "$ref": "#/definitions/Seance"
+                        }
+                    },
+                    "422": {
+                        "description": "Champs manquants obligatoires ou incorrects"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "seance"
+                ],
+                "summary": "Delete a seance",
+                "description": "Use this method to delete a seance based on its id.",
+                "operationId": "deleteSeance",
+                "parameters": [
+                    {
+                        "name": "id_seance",
+                        "in": "path",
+                        "description": "Seance ID to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Seance deleted"
+                    },
+                    "404": {
+                        "description": "Invalid seance value"
                     }
                 }
             }

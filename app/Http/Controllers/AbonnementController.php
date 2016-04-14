@@ -60,6 +60,10 @@ class AbonnementController extends Controller
      *         type="string"
      *     ),
      *     @SWG\Response(
+     *         response=403,
+     *         description="You don't have authorization for this content"
+     *     ),
+     *     @SWG\Response(
      *          response=201,
      *          description="Subscription created",
      *          @SWG\Schema(
@@ -163,6 +167,10 @@ class AbonnementController extends Controller
      *         type="string"
      *     ),
      *     @SWG\Response(
+     *         response=403,
+     *         description="You don't have authorization for this content"
+     *     ),
+     *     @SWG\Response(
      *         response=200,
      *         description="Subscription updated",
      *         @SWG\Schema(
@@ -219,6 +227,10 @@ class AbonnementController extends Controller
      *         required=true,
      *         type="integer",
      *         format="int64"
+     *     ),
+     *     @SWG\Response(
+     *         response=403,
+     *         description="You don't have authorization for this content"
      *     ),
      *     @SWG\Response(
      *         response=200,
