@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 class HistoriqueMembre extends Model
 {
     public $primaryKey = "id_historique";
+    public $table = "historique_membre";
     public $timestamps = false;
 
     public function membre() {
