@@ -424,6 +424,177 @@
                 }
             }
         },
+        "/employe": {
+            "get": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Get employee list",
+                "description": "Use this method to return a listing of employees.",
+                "operationId": "listEmployee",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Employe"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "The request didn't return any content."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Create an employee",
+                "description": "Use this method to create a new employee.",
+                "operationId": "createEmployee",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_personne",
+                        "in": "formData",
+                        "description": "Id of the person",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_fonction",
+                        "in": "formData",
+                        "description": "Id of the function",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Employee created",
+                        "schema": {
+                            "$ref": "#/definitions/Employe"
+                        }
+                    },
+                    "403": {
+                        "description": "You're not allowed to access this service."
+                    },
+                    "422": {
+                        "description": "Missing or incorrect fields"
+                    }
+                }
+            }
+        },
+        "/employe/{id_employe}": {
+            "get": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Display an employee",
+                "description": "Use this method to return a single employee attributes based on its id.",
+                "operationId": "showEmployee",
+                "parameters": [
+                    {
+                        "name": "id_employe",
+                        "in": "path",
+                        "description": "Id of employee to fetch",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Employe"
+                        }
+                    },
+                    "404": {
+                        "description": "Employee not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Update an employee",
+                "description": "Use this method to update the attributes of an employee based on its id.",
+                "operationId": "updateEmployee",
+                "consumes": [
+                    "multipart/form-data",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id_employe",
+                        "in": "path",
+                        "description": "Id of the employee",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "id_personne",
+                        "in": "formData",
+                        "description": "Id of the person",
+                        "type": "string"
+                    },
+                    {
+                        "name": "id_fonction",
+                        "in": "formData",
+                        "description": "Id of the function",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Employee updated",
+                        "schema": {
+                            "$ref": "#/definitions/Employe"
+                        }
+                    },
+                    "403": {
+                        "description": "You're not allowed to access this service."
+                    },
+                    "422": {
+                        "description": "Missing or incorrect fields"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "employe"
+                ],
+                "summary": "Delete an employee",
+                "description": "Use this method to delete an employee based on its id.",
+                "operationId": "deleteEmployee",
+                "parameters": [
+                    {
+                        "name": "id_employe",
+                        "in": "path",
+                        "description": "Employee id to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "You're not allowed to access this service."
+                    },
+                    "200": {
+                        "description": "Employee deleted"
+                    },
+                    "404": {
+                        "description": "Invalid employee value"
+                    }
+                }
+            }
+        },
         "/film": {
             "get": {
                 "tags": [
@@ -1010,7 +1181,7 @@
                         "description": "Forfait created"
                     },
                     "422": {
-                        "description": "Champs manquant obligatoire ou incorrect"
+                        "description": "Fields missing or incorrect"
                     }
                 }
             }
@@ -1100,7 +1271,7 @@
                         "description": "Forfait updated"
                     },
                     "422": {
-                        "description": "Champs manquant obligatoire ou incorrect"
+                        "description": "Fields missong or incorrect"
                     }
                 }
             },

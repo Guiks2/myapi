@@ -110,7 +110,7 @@ class DistributeurController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nom' => 'required|unique:distributeurs|max:255',
-            'telephone' => 'required|max:30',
+            'telephone' => 'required|max:15',
             'adresse' => 'max:255',
             'cpostal' => 'numeric',
             'ville' => 'max:255',
@@ -232,7 +232,7 @@ class DistributeurController extends Controller
      *         in="formData",
      *         name="telephone",
      *         type="string",
-     *         maximum="255"
+     *         maximum="15"
      *     ),
      *     @SWG\Response(
      *         response=200,
@@ -255,7 +255,7 @@ class DistributeurController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nom' => 'unique:distributeurs|max:255',
-            'telephone' => 'max:30',
+            'telephone' => 'max:15',
             'adresse' => 'max:255',
             'cpostal' => 'numeric',
             'ville' => 'max:255',
