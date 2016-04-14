@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Fonction;
 use Illuminate\Http\Request;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 
 class FonctionController extends Controller
@@ -59,7 +60,7 @@ class FonctionController extends Controller
      *         type="string"
      *     ),
      *     @SWG\Parameter(
-     *         description="Salary of the function",
+     *         description="Senior status of the function",
      *         in="formData",
      *         name="cadre",
      *         required=true,
@@ -74,7 +75,7 @@ class FonctionController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=403,
-     *         description="You don't have authorization for this content"
+     *         description="You're not allowed to access this service."
      *     ),
      *     @SWG\Response(
      *         response=422,
@@ -87,7 +88,7 @@ class FonctionController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service .'],
                 403);
         } else {
             $validator = Validator::make($request->all(), [
@@ -162,8 +163,8 @@ class FonctionController extends Controller
      *     consumes={"multipart/form-data", "application/x-www-form-urlencoded"},
      *     tags={"fonction"},
      *     @SWG\Parameter(
-     *         description="Name of the function",
-     *         in="formData",
+     *         description="Id of the function",
+     *         in="path",
      *         name="id_fonction",
      *         required=true,
      *         type="integer"
@@ -195,7 +196,7 @@ class FonctionController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=403,
-     *         description="You don't have authorization for this content"
+     *         description="You're not allowed to access this service."
      *     ),
      *     @SWG\Response(
      *         response=422,
@@ -208,7 +209,7 @@ class FonctionController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service .'],
                 403);
         } else {
             $validator = Validator::make($request->all(), [
@@ -224,9 +225,9 @@ class FonctionController extends Controller
             }
 
             $fonction = Fonction::find($id);
-            $fonction->nom = $request->nom;
-            $fonction->salaire = $request->salaire;
-            $fonction->cadre = $request->cadre;
+            $fonction->nom = $request->nom != null ? $request->nom : $fonction->nom;
+            $fonction->salaire = $request->salaire != null ? $request->salaire : $fonction->salaire;
+            $fonction->cadre = $request->cadre != null ? $request->cadre : $fonction->cadre;
             $fonction->save();
 
             return response()->json(
@@ -252,7 +253,7 @@ class FonctionController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=403,
-     *         description="You don't have authorization for this content"
+     *         description="You're not allowed to access this service."
      *     ),
      *     @SWG\Response(
      *         response=200,
@@ -270,7 +271,7 @@ class FonctionController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if ($user->type != 1){
             return response()->json(
-                ['error' => 'You don\'t have authorization for this content'],
+                ['error' => 'You\'re not allowed to access this service .'],
                 403);
         } else {
             $fonction = Fonction::find($id);
