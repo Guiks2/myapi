@@ -63,18 +63,21 @@ class SeanceController extends Controller
      *         description="Room ID",
      *         in="formData",
      *         name="id_personne_ouvreur",
+     *         required=true,
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
      *         description="Technician guy ID",
      *         in="formData",
      *         name="id_personne_technicien",
+     *         required=true,
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
      *         description="Cleaning guy ID",
      *         in="formData",
      *         name="id_personne_menage",
+     *         required=true,
      *         type="integer" 
      *     ),
      *     @SWG\Parameter(
@@ -89,6 +92,7 @@ class SeanceController extends Controller
      *         description="Ending time",
      *         in="formData",
      *         name="fin_seance",
+     *         required=true,
      *         type="string",
      *         maximum="255" 
      *     ),
@@ -110,11 +114,11 @@ class SeanceController extends Controller
         $validator = Validator::make($request->all(), [
             'id_film' => 'required|numeric|exists:films',
             'id_salle' => 'required|numeric|exists:salles',
-            'id_personne_ouvreur' => 'numeric|exists:personnes,id_personne',
-            'id_personne_technicien' => 'numeric|exists:personnes,id_personne',
-            'id_personne_menage' => 'numeric|exists:personnes,id_personne',
+            'id_personne_ouvreur' => 'required|numeric|exists:personnes,id_personne',
+            'id_personne_technicien' => 'required|numeric|exists:personnes,id_personne',
+            'id_personne_menage' => 'required|numeric|exists:personnes,id_personne',
             'debut_seance' => 'required|max:255',
-            'fin_seance' => 'max:255'
+            'fin_seance' => 'required|max:255'
         ]);
 
         if($validator->fails()){
