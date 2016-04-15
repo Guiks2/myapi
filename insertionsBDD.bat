@@ -13,7 +13,7 @@ curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header
 REM Film
 curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "id_genre=17&id_distributeur=70&titre=Hostel%3A%20Part%20III&resum=Three%20young%20women%20are%20lured%20into%20a%20Slovakian%20hostel.%20%20Once%20there%2C%20they%20are%20subjected%20to%20all%20kinds%20of%20torture%20and%20hell...%20%20Can%20they%20escape%3F&date_debut_affiche=2007-06-29&date_fin_affiche=2007-08-29&duree_minutes=120&annee_production=2006" "http://myapi.com/film?api_key="%token%
 REM Fonction
-curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "nom=associé&salaire=30000&cadre=1" "http://myapi.com/fonction?api_key="%token%
+curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "nom=associe&salaire=30000&cadre=1" "http://myapi.com/fonction?api_key="%token%
 REM HistoriqueMembre
 curl -X POST --header "Content-Type: application/x-www-form-urlencoded" --header "Accept: application/json" -d "id_membre=1&id_seance=1&date=2016-04-16 10:00:00" "http://myapi.com/historique_membre?api_key="%token%
 REM Membre
